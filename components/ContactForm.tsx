@@ -57,9 +57,7 @@ export default function ContactForm() {
         }
 
         setSubmitStatus("success");
-        setStatusMessage(
-          "Ihre Nachricht wurde erfolgreich gesendet. Wir werden uns in Kürze bei Ihnen melden."
-        );
+        setStatusMessage(t("contact.success"));
         setFormData({
           company: "",
           lastName: "",
@@ -79,10 +77,7 @@ export default function ContactForm() {
         }
 
         setSubmitStatus("error");
-        setStatusMessage(
-          data.message ||
-            "Es gab ein Problem beim Senden Ihrer Nachricht. Bitte versuchen Sie es später erneut."
-        );
+        setStatusMessage(data.message || t("contact.error"));
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -95,9 +90,7 @@ export default function ContactForm() {
       }
 
       setSubmitStatus("error");
-      setStatusMessage(
-        "Es gab ein Problem beim Senden Ihrer Nachricht. Bitte versuchen Sie es später erneut."
-      );
+      setStatusMessage(t("contact.error"));
     } finally {
       setIsSubmitting(false);
 
@@ -113,54 +106,54 @@ export default function ContactForm() {
       id="contact"
       className="scroll-mt-20 py-16 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12 text-gray-800 dark:text-gray-300">
+        <h2 className="text-3xl font-bold text-center mb-12 text-gray-800 dark:text-white">
           {t("contact.title")}
         </h2>
 
         <div className="max-w-5xl mx-auto">
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
             <div className="md:flex">
               <div className="md:w-1/3 bg-violet-700 text-white p-8">
-                <h3 className="text-xl font-semibold mb-6">
+                <h3 className="text-xl font-semibold mb-6 text-white">
                   {t("contact.info")}
                 </h3>
 
                 <div className="space-y-6">
                   <div className="flex items-start">
-                    <Mail className="h-6 w-6 mr-3 mt-0.5" />
+                    <Mail className="h-6 w-6 mr-3 mt-0.5 text-white" />
                     <div>
-                      <p className="font-medium text-gray-900 dark:text-white">
+                      <p className="font-medium text-white">
                         {t("contact.email")}
                       </p>
                       <a
                         href="mailto:info@goa-erwachsenenbildung.de"
-                        className="hover:underline">
+                        className="text-white hover:underline">
                         info@goa-erwachsenenbildung.de
                       </a>
                     </div>
                   </div>
 
                   <div className="flex items-start">
-                    <Phone className="h-6 w-6 mr-3 mt-0.5" />
+                    <Phone className="h-6 w-6 mr-3 mt-0.5 text-white" />
                     <div>
-                      <p className="font-medium text-gray-900 dark:text-white">
+                      <p className="font-medium text-white">
                         {t("contact.phone")} / {t("contact.whatsapp")}
                       </p>
                       <a
                         href="tel:+4917685436390"
-                        className="hover:underline">
+                        className="text-white hover:underline">
                         +49 176 8543 6390
                       </a>
                     </div>
                   </div>
 
                   <div className="flex items-start">
-                    <MessageSquare className="h-6 w-6 mr-3 mt-0.5" />
+                    <MessageSquare className="h-6 w-6 mr-3 mt-0.5 text-white" />
                     <div>
-                      <p className="font-medium text-gray-900 dark:text-white">
+                      <p className="font-medium text-white">
                         {t("contact.available")}
                       </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm text-white text-opacity-90">
                         9:00 - 17:00
                       </p>
                     </div>
@@ -170,13 +163,13 @@ export default function ContactForm() {
 
               <div className="md:w-2/3 p-8">
                 {submitStatus === "success" && (
-                  <div className="mb-6 p-4 bg-green-100 text-green-700 rounded-md">
+                  <div className="mb-6 p-4 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-100 rounded-md">
                     {statusMessage}
                   </div>
                 )}
 
                 {submitStatus === "error" && (
-                  <div className="mb-6 p-4 bg-red-100 text-red-700 rounded-md">
+                  <div className="mb-6 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-100 rounded-md">
                     {statusMessage}
                   </div>
                 )}

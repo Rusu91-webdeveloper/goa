@@ -111,3 +111,44 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Enhanced Calendar Styles */
+.calendar-enhanced {
+  font-size: 1rem;
+}
+
+.calendar-enhanced .rdp-months {
+  width: 100%;
+}
+
+.calendar-enhanced .rdp-month {
+  width: 100%;
+}
+
+.calendar-enhanced .rdp-table {
+  width: 100%;
+  max-width: none;
+}
+
+.calendar-enhanced .rdp-cell {
+  padding: 6px;
+}
+
+.calendar-enhanced .rdp-day {
+  width: 40px;
+  height: 40px;
+  font-size: 0.95rem;
+  margin: 0 auto;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.calendar-enhanced .rdp-day_selected {
+  background-color: rgb(139, 92, 246); /* violet-500 */
+  color: white;
+}
+
+.calendar-enhanced .rdp-day:hover {
+  background-color: rgb(196, 181, 253); /* violet-300 */
+  color: rgb(55, 48, 163); /* violet-900 */
+}

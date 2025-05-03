@@ -11,6 +11,7 @@ export const translations = {
     "nav.profile": "Profil",
     "nav.admin": "Admin",
     "nav.logout": "Abmelden",
+    "nav.dashboard": "Dashboard",
 
     // Hero
     "hero.title": "GOA Erwachsenenbildung GmbH",
@@ -392,6 +393,89 @@ export const translations = {
     "admin.settings.seo.uploadOgImage": "OG-Bild hochladen",
     "admin.settings.seo.enableSitemap": "Sitemap aktivieren",
     "admin.settings.seo.robotsTxt": "robots.txt",
+
+    // Dashboard
+    "dashboard.welcome": "Willkommen",
+    "dashboard.subtitle":
+      "Hier können Sie Ihre Dienste und Jobeinstellungen verwalten.",
+    "dashboard.services": "Dienste",
+    "dashboard.jobs": "Jobs",
+    "dashboard.profile": "Profil",
+
+    // Dashboard Services Tab
+    "dashboard.services.title": "Dienste buchen",
+    "dashboard.services.description":
+      "Wählen Sie einen Dienst aus und vereinbaren Sie einen Termin.",
+    "dashboard.services.intro":
+      "Entdecken Sie unsere verfügbaren Dienste und buchen Sie einfach online.",
+    "dashboard.services.price": "Preis",
+    "dashboard.services.book": "Buchen",
+    "dashboard.services.bookService": "Dienst buchen",
+    "dashboard.services.selectDate": "Datum auswählen",
+    "dashboard.services.pickDate": "Datum wählen",
+    "dashboard.services.additionalNotes": "Zusätzliche Notizen",
+    "dashboard.services.notesPlaceholder":
+      "Zusätzliche Anforderungen oder Informationen...",
+    "dashboard.services.cancel": "Abbrechen",
+    "dashboard.services.confirmBooking": "Buchung bestätigen",
+    "dashboard.services.processing": "Verarbeitung...",
+    "dashboard.services.error": "Fehler",
+    "dashboard.services.selectDateError": "Bitte wählen Sie ein Datum aus",
+    "dashboard.services.bookingSuccess": "Buchung erfolgreich",
+    "dashboard.services.bookingConfirmation":
+      "Ihre Buchung wurde erfolgreich eingereicht",
+    "dashboard.services.bookingError": "Buchungsfehler",
+    "dashboard.services.bookingErrorMessage":
+      "Beim Buchen des Dienstes ist ein Fehler aufgetreten",
+    "dashboard.services.bookingConfirmed": "Buchung bestätigt",
+    "dashboard.services.bookingSuccessDescription":
+      "Ihre Buchung wurde erfolgreich eingereicht",
+    "dashboard.services.thankYou":
+      "Vielen Dank für Ihre Buchung. Wir werden Sie bald kontaktieren.",
+
+    // Dashboard Jobs Tab
+    "dashboard.jobs.title": "Stellenangebote",
+    "dashboard.jobs.description":
+      "Durchsuchen Sie aktuelle Stellenangebote und bewerben Sie sich online.",
+    "dashboard.jobs.intro":
+      "Entdecken Sie Karrieremöglichkeiten bei GOA und bewerben Sie sich jetzt.",
+    "dashboard.jobs.allJobs": "Alle Jobs",
+    "dashboard.jobs.teaching": "Lehrkräfte",
+    "dashboard.jobs.admin": "Verwaltung",
+    "dashboard.jobs.noJobs": "Keine Jobs in dieser Kategorie gefunden",
+    "dashboard.jobs.viewDetails": "Details anzeigen",
+    "dashboard.jobs.apply": "Bewerben",
+    "dashboard.jobs.applyForJob": "Für diese Stelle bewerben",
+    "dashboard.jobs.coverLetter": "Anschreiben",
+    "dashboard.jobs.coverLetterPlaceholder":
+      "Schreiben Sie hier Ihr Anschreiben...",
+    "dashboard.jobs.resume": "Lebenslauf",
+    "dashboard.jobs.dragAndDrop":
+      "Ziehen Sie Ihren Lebenslauf hierher oder klicken Sie, um eine Datei auszuwählen",
+    "dashboard.jobs.browseFiles": "Dateien durchsuchen",
+    "dashboard.jobs.cancel": "Abbrechen",
+    "dashboard.jobs.submitApplication": "Bewerbung einreichen",
+    "dashboard.jobs.submitting": "Wird eingereicht...",
+    "dashboard.jobs.error": "Fehler",
+    "dashboard.jobs.formError":
+      "Bitte füllen Sie alle erforderlichen Felder aus",
+    "dashboard.jobs.resumeRequired": "Bitte laden Sie Ihren Lebenslauf hoch",
+    "dashboard.jobs.applicationSuccess": "Bewerbung erfolgreich",
+    "dashboard.jobs.applicationConfirmation":
+      "Ihre Bewerbung wurde erfolgreich eingereicht",
+    "dashboard.jobs.applicationError": "Bewerbungsfehler",
+    "dashboard.jobs.applicationErrorMessage":
+      "Beim Einreichen Ihrer Bewerbung ist ein Fehler aufgetreten",
+    "dashboard.jobs.applicationConfirmed": "Bewerbung bestätigt",
+    "dashboard.jobs.applicationSuccessDescription":
+      "Ihre Bewerbung wurde erfolgreich eingereicht",
+    "dashboard.jobs.thankYou":
+      "Vielen Dank für Ihre Bewerbung. Wir werden Sie in Kürze kontaktieren.",
+
+    // Dashboard Profile Tab
+    "dashboard.profile.title": "Ihr Profil",
+    "dashboard.profile.description":
+      "Verwalten Sie Ihre persönlichen Informationen und Ihr Passwort.",
   },
   en: {
     // Navigation
@@ -405,6 +489,7 @@ export const translations = {
     "nav.profile": "Profile",
     "nav.admin": "Admin",
     "nav.logout": "Logout",
+    "nav.dashboard": "Dashboard",
 
     // Hero
     "hero.title": "GOA Adult Education GmbH",
@@ -608,14 +693,16 @@ export const translations = {
     "profile.personalInfo": "Personal Information",
     "profile.firstName": "First Name",
     "profile.lastName": "Last Name",
-    "profile.email": "Email",
-    "profile.firstNamePlaceholder": "Your first name",
-    "profile.lastNamePlaceholder": "Your last name",
-    "profile.emailNotEditable": "Email address cannot be changed",
-    "profile.updateSuccess": "Success",
-    "profile.profileUpdated": "Your profile has been updated successfully",
-    "profile.updateError": "Error",
-    "profile.somethingWentWrong": "Something went wrong. Please try again",
+    "profile.email": "Email Address",
+    "profile.firstNamePlaceholder": "Enter your first name",
+    "profile.lastNamePlaceholder": "Enter your last name",
+    "profile.emailNotEditable":
+      "You cannot change your email address. Please contact support if this is necessary.",
+    "profile.updateSuccess": "Successfully Updated",
+    "profile.profileUpdated": "Your profile has been successfully updated",
+    "profile.updateError": "Update Error",
+    "profile.somethingWentWrong":
+      "Something went wrong. Please try again later.",
 
     // Password Change
     "profile.changePassword": "Change Password",
@@ -777,5 +864,85 @@ export const translations = {
     "admin.settings.seo.uploadOgImage": "Upload OG Image",
     "admin.settings.seo.enableSitemap": "Enable Sitemap",
     "admin.settings.seo.robotsTxt": "robots.txt",
+
+    // Dashboard
+    "dashboard.welcome": "Welcome",
+    "dashboard.subtitle": "Here you can manage your services and job settings.",
+    "dashboard.services": "Services",
+    "dashboard.jobs": "Jobs",
+    "dashboard.profile": "Profile",
+
+    // Dashboard Services Tab
+    "dashboard.services.title": "Book Services",
+    "dashboard.services.description":
+      "Choose a service and schedule an appointment.",
+    "dashboard.services.intro":
+      "Explore our available services and book easily online.",
+    "dashboard.services.price": "Price",
+    "dashboard.services.book": "Book Now",
+    "dashboard.services.bookService": "Book Service",
+    "dashboard.services.selectDate": "Select Date",
+    "dashboard.services.pickDate": "Pick Date",
+    "dashboard.services.additionalNotes": "Additional Notes",
+    "dashboard.services.notesPlaceholder":
+      "Additional requirements or information...",
+    "dashboard.services.cancel": "Cancel",
+    "dashboard.services.confirmBooking": "Confirm Booking",
+    "dashboard.services.processing": "Processing...",
+    "dashboard.services.error": "Error",
+    "dashboard.services.selectDateError": "Please select a date",
+    "dashboard.services.bookingSuccess": "Booking Successful",
+    "dashboard.services.bookingConfirmation":
+      "Your booking has been successfully submitted",
+    "dashboard.services.bookingError": "Booking Error",
+    "dashboard.services.bookingErrorMessage":
+      "An error occurred while booking the service",
+    "dashboard.services.bookingConfirmed": "Booking Confirmed",
+    "dashboard.services.bookingSuccessDescription":
+      "Your booking has been successfully submitted",
+    "dashboard.services.thankYou":
+      "Thank you for your booking. We will contact you shortly.",
+
+    // Dashboard Jobs Tab
+    "dashboard.jobs.title": "Job Offers",
+    "dashboard.jobs.description":
+      "Search for current job offers and apply online.",
+    "dashboard.jobs.intro":
+      "Discover career opportunities at GOA and apply now.",
+    "dashboard.jobs.allJobs": "All Jobs",
+    "dashboard.jobs.teaching": "Teachers",
+    "dashboard.jobs.admin": "Management",
+    "dashboard.jobs.noJobs": "No jobs found in this category",
+    "dashboard.jobs.viewDetails": "View Details",
+    "dashboard.jobs.apply": "Apply",
+    "dashboard.jobs.applyForJob": "Apply for this position",
+    "dashboard.jobs.coverLetter": "Cover Letter",
+    "dashboard.jobs.coverLetterPlaceholder": "Write your cover letter here...",
+    "dashboard.jobs.resume": "Resume",
+    "dashboard.jobs.dragAndDrop":
+      "Drag and drop your resume here or click to select a file",
+    "dashboard.jobs.browseFiles": "Browse Files",
+    "dashboard.jobs.cancel": "Cancel",
+    "dashboard.jobs.submitApplication": "Submit Application",
+    "dashboard.jobs.submitting": "Submitting...",
+    "dashboard.jobs.error": "Error",
+    "dashboard.jobs.formError": "Please fill out all required fields",
+    "dashboard.jobs.resumeRequired": "Please upload your resume",
+    "dashboard.jobs.applicationSuccess": "Application Successful",
+    "dashboard.jobs.applicationConfirmation":
+      "Your application has been successfully submitted",
+    "dashboard.jobs.applicationError": "Application Error",
+    "dashboard.jobs.applicationErrorMessage":
+      "An error occurred while submitting your application",
+    "dashboard.jobs.applicationConfirmed": "Application Confirmed",
+    "dashboard.jobs.applicationSuccessDescription":
+      "Your application has been successfully submitted",
+    "dashboard.jobs.thankYou":
+      "Thank you for your application. We will contact you shortly.",
+
+    // Dashboard Profile Tab
+    "dashboard.profile.title": "Your Profile",
+    "dashboard.profile.description":
+      "Manage your personal information and password.",
   },
 };

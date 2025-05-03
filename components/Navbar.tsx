@@ -233,6 +233,16 @@ export default function Navbar() {
                   </Link>
                 )}
                 <Link
+                  href="/dashboard"
+                  className={cn(
+                    "px-3 py-1.5 text-sm font-medium transition-colors",
+                    scrolled || !isHomePage
+                      ? "text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400"
+                      : "text-white hover:text-gray-200"
+                  )}>
+                  {t("nav.dashboard")}
+                </Link>
+                <Link
                   href="/profile"
                   className={cn(
                     "px-3 py-1.5 text-sm font-medium transition-colors",
@@ -351,6 +361,12 @@ export default function Navbar() {
                     {t("nav.admin")}
                   </Link>
                 )}
+                <Link
+                  href="/dashboard"
+                  className="block w-full px-4 py-2 text-center rounded-md bg-violet-600 text-white hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-600 transition-colors"
+                  onClick={closeMenu}>
+                  {t("nav.dashboard")}
+                </Link>
                 <Link
                   href="/profile"
                   className="block w-full px-4 py-2 text-center rounded-md bg-violet-600 text-white hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-600 transition-colors"
