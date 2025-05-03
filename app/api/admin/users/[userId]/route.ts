@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
-import User from "@/models/User";
+import UserModel from "@/models/UserModel";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { authOptions, getCurrentUser } from "@/lib/auth";
 
 // GET /api/admin/users/[userId] - Get a specific user
 export async function GET(
@@ -10,10 +10,15 @@ export async function GET(
   { params }: { params: { userId: string } }
 ) {
   try {
+    // Try both authentication methods
     const session = await getServerSession(authOptions);
+    const currentUser = await getCurrentUser();
 
     // Check if user is authenticated and is an admin
-    if (!session || session.user.role !== "admin") {
+    const isAdmin =
+      session?.user?.role === "admin" || currentUser?.role === "admin";
+
+    if (!isAdmin) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
         { status: 403 }
@@ -22,11 +27,11 @@ export async function GET(
 
     const { userId } = params;
 
+    // Connect to database
     await connectToDatabase();
 
-    const user = await User.findById(userId)
-      .select("_id name email role isEmailVerified createdAt")
-      .lean();
+    // Get user with all fields
+    const user = await UserModel.findById(userId).lean();
 
     if (!user) {
       return NextResponse.json(
@@ -54,10 +59,15 @@ export async function PUT(
   { params }: { params: { userId: string } }
 ) {
   try {
+    // Try both authentication methods
     const session = await getServerSession(authOptions);
+    const currentUser = await getCurrentUser();
 
     // Check if user is authenticated and is an admin
-    if (!session || session.user.role !== "admin") {
+    const isAdmin =
+      session?.user?.role === "admin" || currentUser?.role === "admin";
+
+    if (!isAdmin) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
         { status: 403 }
@@ -65,12 +75,13 @@ export async function PUT(
     }
 
     const { userId } = params;
-    const { name, email, role } = await req.json();
+    const updateData = await req.json();
 
+    // Connect to database
     await connectToDatabase();
 
     // Check if user exists
-    const user = await User.findById(userId);
+    const user = await UserModel.findById(userId);
     if (!user) {
       return NextResponse.json(
         { success: false, message: "User not found" },
@@ -79,8 +90,8 @@ export async function PUT(
     }
 
     // Check if email is being changed and if it already exists
-    if (email && email !== user.email) {
-      const existingUser = await User.findOne({ email });
+    if (updateData.email && updateData.email !== user.email) {
+      const existingUser = await UserModel.findOne({ email: updateData.email });
       if (existingUser) {
         return NextResponse.json(
           { success: false, message: "Email already in use" },
@@ -89,24 +100,30 @@ export async function PUT(
       }
     }
 
-    // Update user
-    if (name) user.name = name;
-    if (email) user.email = email;
-    if (role) user.role = role;
+    // Fields that shouldn't be updated directly
+    const restrictedFields = [
+      "_id",
+      "password",
+      "resetPasswordToken",
+      "resetPasswordExpires",
+      "verificationToken",
+      "verificationTokenExpires",
+    ];
+
+    // Update user with all provided fields
+    Object.keys(updateData).forEach((key) => {
+      if (!restrictedFields.includes(key)) {
+        // @ts-ignore - We're dynamically setting properties
+        user[key] = updateData[key];
+      }
+    });
 
     await user.save();
 
     return NextResponse.json({
       success: true,
       message: "User updated successfully",
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        isEmailVerified: user.isEmailVerified,
-        createdAt: user.createdAt,
-      },
+      user: user.toObject(),
     });
   } catch (error) {
     console.error("Error updating user:", error);
@@ -123,10 +140,15 @@ export async function DELETE(
   { params }: { params: { userId: string } }
 ) {
   try {
+    // Try both authentication methods
     const session = await getServerSession(authOptions);
+    const currentUser = await getCurrentUser();
 
     // Check if user is authenticated and is an admin
-    if (!session || session.user.role !== "admin") {
+    const isAdmin =
+      session?.user?.role === "admin" || currentUser?.role === "admin";
+
+    if (!isAdmin) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
         { status: 403 }
@@ -135,10 +157,12 @@ export async function DELETE(
 
     const { userId } = params;
 
+    // Connect to database
     await connectToDatabase();
 
-    // Prevent deleting self
-    if (session.user.id === userId) {
+    // Prevent deleting self - check both auth methods
+    const currentUserId = session?.user?.id || currentUser?._id.toString();
+    if (currentUserId === userId) {
       return NextResponse.json(
         { success: false, message: "Cannot delete your own account" },
         { status: 400 }
@@ -146,7 +170,7 @@ export async function DELETE(
     }
 
     // Check if user exists and delete
-    const result = await User.findByIdAndDelete(userId);
+    const result = await UserModel.findByIdAndDelete(userId);
 
     if (!result) {
       return NextResponse.json(

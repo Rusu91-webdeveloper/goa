@@ -36,9 +36,8 @@ import {
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useI18n } from "@/lib/i18n/i18n-context";
 
 interface User {
   _id: string;
@@ -50,6 +49,7 @@ interface User {
 }
 
 export default function UsersPage() {
+  const { t } = useI18n();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -188,13 +188,15 @@ export default function UsersPage() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            Benutzerverwaltung
+            {t("admin.users.title") || "User Management"}
           </h1>
-          <p className="text-gray-500">Verwalten Sie alle Benutzerkonten</p>
+          <p className="text-gray-500">
+            {t("admin.users.subtitle") || "Manage all user accounts"}
+          </p>
         </div>
         <Button onClick={handleCreateUser}>
           <UserPlus className="mr-2 h-4 w-4" />
-          Neuer Benutzer
+          {t("admin.users.newUser") || "New User"}
         </Button>
       </div>
 
@@ -203,7 +205,9 @@ export default function UsersPage() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
             <Input
-              placeholder="Suche nach Benutzern..."
+              placeholder={
+                t("admin.users.searchPlaceholder") || "Search for users..."
+              }
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -215,11 +219,17 @@ export default function UsersPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Benutzer</TableHead>
-                <TableHead>Rolle</TableHead>
-                <TableHead>Email Status</TableHead>
-                <TableHead>Registriert am</TableHead>
-                <TableHead className="text-right">Aktionen</TableHead>
+                <TableHead>{t("admin.users.user") || "User"}</TableHead>
+                <TableHead>{t("admin.users.role") || "Role"}</TableHead>
+                <TableHead>
+                  {t("admin.users.emailStatus") || "Email Status"}
+                </TableHead>
+                <TableHead>
+                  {t("admin.users.registered") || "Registered"}
+                </TableHead>
+                <TableHead className="text-right">
+                  {t("admin.users.actions") || "Actions"}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -228,7 +238,7 @@ export default function UsersPage() {
                   <TableCell
                     colSpan={5}
                     className="text-center py-10">
-                    Laden...
+                    {t("admin.loading") || "Loading..."}
                   </TableCell>
                 </TableRow>
               ) : users.length === 0 ? (
@@ -236,7 +246,7 @@ export default function UsersPage() {
                   <TableCell
                     colSpan={5}
                     className="text-center py-10">
-                    Keine Benutzer gefunden
+                    {t("admin.users.noUsersFound") || "No users found"}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -249,15 +259,14 @@ export default function UsersPage() {
                             src={`https://api.dicebear.com/7.x/initials/svg?seed=${
                               user.name || user.email
                             }`}
+                            alt={user.name || user.email}
                           />
                           <AvatarFallback>
-                            {user.name?.[0] || user.email[0]}
+                            {(user.name || user.email).charAt(0).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="font-medium">
-                            {user.name || "N/A"}
-                          </div>
+                          <div className="font-medium">{user.name || "—"}</div>
                           <div className="text-sm text-gray-500">
                             {user.email}
                           </div>
@@ -267,37 +276,42 @@ export default function UsersPage() {
                     <TableCell>
                       <Badge
                         variant={
-                          user.role === "admin" ? "destructive" : "secondary"
+                          user.role === "admin"
+                            ? "default"
+                            : user.role === "teacher"
+                            ? "outline"
+                            : "secondary"
                         }>
                         {user.role}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge
-                        variant={user.isEmailVerified ? "success" : "outline"}>
-                        {user.isEmailVerified
-                          ? "Verifiziert"
-                          : "Nicht verifiziert"}
-                      </Badge>
+                      {user.isEmailVerified ? (
+                        <Badge className="bg-green-600 text-white">
+                          {t("admin.users.verified") || "Verified"}
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline">
+                          {t("admin.users.unverified") || "Unverified"}
+                        </Badge>
+                      )}
                     </TableCell>
                     <TableCell>
                       {new Date(user.createdAt).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">
-                      <div className="flex justify-end space-x-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => handleEditUser(user)}>
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => handleDeleteUser(user)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleEditUser(user)}>
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteUser(user)}>
+                        <Trash2 className="h-4 w-4 text-red-500" />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))
@@ -310,31 +324,67 @@ export default function UsersPage() {
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                  disabled={currentPage === 1}
-                />
-              </PaginationItem>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
-                  <PaginationItem key={page}>
-                    <PaginationLink
-                      isActive={page === currentPage}
-                      onClick={() => setCurrentPage(page)}>
-                      {page}
-                    </PaginationLink>
-                  </PaginationItem>
-                )
-              )}
-
-              <PaginationItem>
-                <PaginationNext
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() =>
-                    setCurrentPage(Math.min(totalPages, currentPage + 1))
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
+                  disabled={currentPage === 1}
+                  className="h-9 w-9 p-0">
+                  <span className="sr-only">
+                    {t("admin.users.previous") || "Previous"}
+                  </span>
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </Button>
+              </PaginationItem>
+              {[...Array(totalPages)].map((_, i) => (
+                <PaginationItem key={i}>
+                  <PaginationLink
+                    onClick={() => setCurrentPage(i + 1)}
+                    isActive={currentPage === i + 1}>
+                    {i + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                   }
                   disabled={currentPage === totalPages}
-                />
+                  className="h-9 w-9 p-0">
+                  <span className="sr-only">
+                    {t("admin.users.next") || "Next"}
+                  </span>
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </Button>
               </PaginationItem>
             </PaginationContent>
           </Pagination>
@@ -347,46 +397,69 @@ export default function UsersPage() {
         onOpenChange={setIsEditDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Benutzer bearbeiten</DialogTitle>
+            <DialogTitle>
+              {t("admin.users.editUser") || "Edit User"}
+            </DialogTitle>
             <DialogDescription>
-              Aktualisieren Sie die Benutzerinformationen. Klicken Sie auf
-              speichern wenn Sie fertig sind.
+              {t("admin.users.editUserDescription") ||
+                "Make changes to the user here. Click save when you're done."}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="name">Name</Label>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label
+                htmlFor="name"
+                className="text-right">
+                {t("admin.users.name") || "Name"}
+              </Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
+                className="col-span-3"
               />
             </div>
-            <div>
-              <Label htmlFor="email">E-Mail</Label>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label
+                htmlFor="email"
+                className="text-right">
+                {t("admin.users.email") || "Email"}
+              </Label>
               <Input
                 id="email"
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
+                className="col-span-3"
               />
             </div>
-            <div>
-              <Label htmlFor="role">Rolle</Label>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label
+                htmlFor="role"
+                className="text-right">
+                {t("admin.users.role") || "Role"}
+              </Label>
               <Select
                 value={formData.role}
                 onValueChange={(value) =>
                   setFormData({ ...formData, role: value })
                 }>
-                <SelectTrigger id="role">
-                  <SelectValue placeholder="Rolle auswählen" />
+                <SelectTrigger className="col-span-3">
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="user">Benutzer</SelectItem>
-                  <SelectItem value="admin">Administrator</SelectItem>
+                  <SelectItem value="user">
+                    {t("admin.users.roleUser") || "User"}
+                  </SelectItem>
+                  <SelectItem value="teacher">
+                    {t("admin.users.roleTeacher") || "Teacher"}
+                  </SelectItem>
+                  <SelectItem value="admin">
+                    {t("admin.users.roleAdmin") || "Admin"}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -395,9 +468,11 @@ export default function UsersPage() {
             <Button
               variant="outline"
               onClick={() => setIsEditDialogOpen(false)}>
-              Abbrechen
+              {t("admin.users.cancel") || "Cancel"}
             </Button>
-            <Button onClick={handleSaveEdit}>Speichern</Button>
+            <Button onClick={handleSaveEdit}>
+              {t("admin.users.save") || "Save"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -408,46 +483,69 @@ export default function UsersPage() {
         onOpenChange={setIsCreateDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Neuen Benutzer erstellen</DialogTitle>
+            <DialogTitle>
+              {t("admin.users.createUser") || "Create User"}
+            </DialogTitle>
             <DialogDescription>
-              Geben Sie die Informationen für den neuen Benutzer ein.
+              {t("admin.users.createUserDescription") ||
+                "Add a new user to the system. A temporary password will be generated."}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="create-name">Name</Label>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label
+                htmlFor="create-name"
+                className="text-right">
+                {t("admin.users.name") || "Name"}
+              </Label>
               <Input
                 id="create-name"
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
+                className="col-span-3"
               />
             </div>
-            <div>
-              <Label htmlFor="create-email">E-Mail</Label>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label
+                htmlFor="create-email"
+                className="text-right">
+                {t("admin.users.email") || "Email"}
+              </Label>
               <Input
                 id="create-email"
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                required
+                className="col-span-3"
               />
             </div>
-            <div>
-              <Label htmlFor="create-role">Rolle</Label>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label
+                htmlFor="create-role"
+                className="text-right">
+                {t("admin.users.role") || "Role"}
+              </Label>
               <Select
                 value={formData.role}
                 onValueChange={(value) =>
                   setFormData({ ...formData, role: value })
                 }>
-                <SelectTrigger id="create-role">
-                  <SelectValue placeholder="Rolle auswählen" />
+                <SelectTrigger className="col-span-3">
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="user">Benutzer</SelectItem>
-                  <SelectItem value="admin">Administrator</SelectItem>
+                  <SelectItem value="user">
+                    {t("admin.users.roleUser") || "User"}
+                  </SelectItem>
+                  <SelectItem value="teacher">
+                    {t("admin.users.roleTeacher") || "Teacher"}
+                  </SelectItem>
+                  <SelectItem value="admin">
+                    {t("admin.users.roleAdmin") || "Admin"}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -456,9 +554,11 @@ export default function UsersPage() {
             <Button
               variant="outline"
               onClick={() => setIsCreateDialogOpen(false)}>
-              Abbrechen
+              {t("admin.users.cancel") || "Cancel"}
             </Button>
-            <Button onClick={handleSaveCreate}>Erstellen</Button>
+            <Button onClick={handleSaveCreate}>
+              {t("admin.users.create") || "Create"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -469,23 +569,33 @@ export default function UsersPage() {
         onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Benutzer löschen</DialogTitle>
+            <DialogTitle>
+              {t("admin.users.deleteUser") || "Delete User"}
+            </DialogTitle>
             <DialogDescription>
-              Möchten Sie den Benutzer{" "}
-              {selectedUser?.name || selectedUser?.email} wirklich löschen?
-              Diese Aktion kann nicht rückgängig gemacht werden.
+              {t("admin.users.deleteUserDescription") ||
+                "Are you sure you want to delete this user? This action cannot be undone."}
             </DialogDescription>
           </DialogHeader>
+          <div className="py-4">
+            {selectedUser && (
+              <p>
+                {t("admin.users.deleteUserConfirm") ||
+                  "You are about to delete:"}{" "}
+                <strong>{selectedUser.name || selectedUser.email}</strong>
+              </p>
+            )}
+          </div>
           <DialogFooter>
             <Button
               variant="outline"
               onClick={() => setIsDeleteDialogOpen(false)}>
-              Abbrechen
+              {t("admin.users.cancel") || "Cancel"}
             </Button>
             <Button
               variant="destructive"
               onClick={handleConfirmDelete}>
-              Löschen
+              {t("admin.users.delete") || "Delete"}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -9,6 +9,7 @@ export const translations = {
     "nav.login": "Anmelden",
     "nav.register": "Registrieren",
     "nav.profile": "Profil",
+    "nav.admin": "Admin",
     "nav.logout": "Abmelden",
 
     // Hero
@@ -210,6 +211,187 @@ export const translations = {
     language: "Sprache",
     "language.de": "Deutsch",
     "language.en": "Englisch",
+
+    // Profile
+    "profile.editProfile": "Profil bearbeiten",
+    "profile.personalInfo": "Persönliche Informationen",
+    "profile.firstName": "Vorname",
+    "profile.lastName": "Nachname",
+    "profile.email": "E-Mail",
+    "profile.firstNamePlaceholder": "Ihr Vorname",
+    "profile.lastNamePlaceholder": "Ihr Nachname",
+    "profile.emailNotEditable": "Die E-Mail-Adresse kann nicht geändert werden",
+    "profile.updateSuccess": "Erfolg",
+    "profile.profileUpdated": "Ihr Profil wurde erfolgreich aktualisiert",
+    "profile.updateError": "Fehler",
+    "profile.somethingWentWrong":
+      "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut",
+
+    // Password Change
+    "profile.changePassword": "Passwort ändern",
+    "profile.currentPassword": "Aktuelles Passwort",
+    "profile.newPassword": "Neues Passwort",
+    "profile.confirmNewPassword": "Neues Passwort bestätigen",
+    "profile.currentPasswordPlaceholder":
+      "Geben Sie Ihr aktuelles Passwort ein",
+    "profile.newPasswordPlaceholder": "Geben Sie Ihr neues Passwort ein",
+    "profile.confirmPasswordPlaceholder": "Bestätigen Sie Ihr neues Passwort",
+    "profile.passwordUpdateSuccess": "Erfolg",
+    "profile.passwordUpdated": "Ihr Passwort wurde erfolgreich aktualisiert",
+    "profile.changing": "Wird geändert...",
+    "profile.allFieldsRequired": "Alle Felder sind erforderlich",
+    "profile.passwordMismatch":
+      "Neues Passwort und Bestätigung stimmen nicht überein",
+    "profile.passwordTooShort":
+      "Neues Passwort muss mindestens 8 Zeichen lang sein",
+
+    // Add admin dashboard translations for German
+    "admin.dashboard.title": "Dashboard",
+    "admin.dashboard.subtitle":
+      "Übersicht aller wichtigen Kennzahlen und Aktivitäten",
+    "admin.loading": "Wird geladen...",
+
+    // Admin navigation and general admin translations for German
+    "admin.navigation.dashboard": "Dashboard",
+    "admin.navigation.users": "Benutzer",
+    "admin.navigation.contacts": "Kontaktanfragen",
+    "admin.navigation.applications": "Bewerbungen",
+    "admin.navigation.analytics": "Analytics",
+    "admin.navigation.settings": "Einstellungen",
+    "admin.logout": "Abmelden",
+    "admin.openSidebar": "Seitenleiste öffnen",
+    "admin.closeSidebar": "Seitenleiste schließen",
+
+    // Stats
+    "admin.stats.users": "Benutzer",
+    "admin.stats.contacts": "Kontaktanfragen",
+    "admin.stats.applications": "Bewerbungen",
+    "admin.stats.pageViews": "Seitenaufrufe",
+    "admin.stats.sinceLastMonth": "seit letztem Monat",
+
+    // Analytics
+    "admin.analytics.title": "Website-Statistiken",
+    "admin.analytics.pageViews": "Seitenaufrufe",
+    "admin.analytics.visitors": "Besucher",
+
+    // Recent Contacts
+    "admin.contacts.recentTitle": "Neueste Kontaktanfragen",
+    "admin.contacts.viewAll": "Alle Kontaktanfragen anzeigen",
+    "admin.contacts.name": "Name",
+    "admin.contacts.email": "E-Mail",
+    "admin.contacts.service": "Dienstleistung",
+    "admin.contacts.date": "Datum",
+    "admin.contacts.status": "Status",
+    "admin.contacts.statusNew": "Neu",
+    "admin.contacts.statusInProgress": "In Bearbeitung",
+    "admin.contacts.statusCompleted": "Abgeschlossen",
+    "admin.contacts.noContacts": "Keine Kontaktanfragen gefunden",
+
+    // Recent Applications
+    "admin.applications.recentTitle": "Neueste Bewerbungen",
+    "admin.applications.viewAll": "Alle Bewerbungen anzeigen",
+    "admin.applications.name": "Name",
+    "admin.applications.email": "E-Mail",
+    "admin.applications.position": "Position",
+    "admin.applications.date": "Datum",
+    "admin.applications.status": "Status",
+    "admin.applications.statusNew": "Neu",
+    "admin.applications.statusReviewing": "Prüfung",
+    "admin.applications.statusInterviewed": "Interviewt",
+    "admin.applications.statusHired": "Eingestellt",
+    "admin.applications.statusRejected": "Abgelehnt",
+    "admin.applications.noApplications": "Keine Bewerbungen gefunden",
+
+    // Add these translations for German
+    "admin.users.title": "Benutzerverwaltung",
+    "admin.users.subtitle": "Verwalten Sie alle Benutzerkonten",
+    "admin.users.newUser": "Neuer Benutzer",
+    "admin.users.searchPlaceholder": "Suche nach Benutzern...",
+    "admin.users.user": "Benutzer",
+    "admin.users.role": "Rolle",
+    "admin.users.emailStatus": "Email Status",
+    "admin.users.registered": "Registriert am",
+    "admin.users.actions": "Aktionen",
+    "admin.users.noUsersFound": "Keine Benutzer gefunden",
+    "admin.users.verified": "Verifiziert",
+    "admin.users.unverified": "Nicht verifiziert",
+    "admin.users.editUser": "Benutzer bearbeiten",
+    "admin.users.editUserDescription":
+      "Aktualisieren Sie die Benutzerinformationen. Klicken Sie auf speichern wenn Sie fertig sind.",
+    "admin.users.name": "Name",
+    "admin.users.email": "E-Mail",
+    "admin.users.roleUser": "Benutzer",
+    "admin.users.roleTeacher": "Lehrkraft",
+    "admin.users.roleAdmin": "Administrator",
+    "admin.users.cancel": "Abbrechen",
+    "admin.users.save": "Speichern",
+    "admin.users.createUser": "Neuen Benutzer erstellen",
+    "admin.users.createUserDescription":
+      "Geben Sie die Informationen für den neuen Benutzer ein.",
+    "admin.users.create": "Erstellen",
+    "admin.users.deleteUser": "Benutzer löschen",
+    "admin.users.deleteUserDescription":
+      "Möchten Sie diesen Benutzer wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "admin.users.deleteUserConfirm":
+      "Sie sind dabei, folgenden Benutzer zu löschen:",
+    "admin.users.delete": "Löschen",
+    "admin.users.previous": "Zurück",
+    "admin.users.next": "Weiter",
+
+    // Admin Settings page
+    "admin.settings.title": "Einstellungen",
+    "admin.settings.subtitle": "Konfigurieren Sie Ihre Website-Einstellungen",
+    "admin.settings.general": "Allgemein",
+    "admin.settings.contact": "Kontakt",
+    "admin.settings.job": "Stellenangebot",
+    "admin.settings.seo": "SEO",
+    "admin.settings.save": "Einstellungen speichern",
+    "admin.settings.saving": "Wird gespeichert...",
+    "admin.settings.success": "Erfolg",
+    "admin.settings.success.message":
+      "Die Einstellungen wurden erfolgreich gespeichert.",
+    "admin.settings.error": "Fehler",
+    "admin.settings.error.message":
+      "Beim Speichern der Einstellungen ist ein Fehler aufgetreten.",
+
+    // General settings
+    "admin.settings.general.siteName": "Website-Name",
+    "admin.settings.general.siteDescription": "Website-Beschreibung",
+    "admin.settings.general.logo": "Logo",
+    "admin.settings.general.favicon": "Favicon",
+    "admin.settings.general.uploadLogo": "Logo hochladen",
+    "admin.settings.general.uploadFavicon": "Favicon hochladen",
+    "admin.settings.general.maintenanceMode": "Wartungsmodus aktivieren",
+    "admin.settings.general.maintenanceMessage": "Wartungsmeldung",
+    "admin.settings.general.googleAnalytics": "Google Analytics ID",
+
+    // Contact settings
+    "admin.settings.contact.email": "E-Mail-Adresse",
+    "admin.settings.contact.phone": "Telefonnummer",
+    "admin.settings.contact.address": "Adresse",
+    "admin.settings.contact.showSocialLinks": "Social-Media-Links anzeigen",
+    "admin.settings.contact.socialLinks": "Social-Media-Links",
+    "admin.settings.contact.facebook": "Facebook",
+    "admin.settings.contact.instagram": "Instagram",
+    "admin.settings.contact.linkedin": "LinkedIn",
+    "admin.settings.contact.twitter": "Twitter",
+
+    // Job settings
+    "admin.settings.job.enableApplications": "Bewerbungen aktivieren",
+    "admin.settings.job.notificationEmail": "Benachrichtigungs-E-Mail",
+    "admin.settings.job.automaticResponses": "Automatische Antworten",
+    "admin.settings.job.applicationFormFields": "Bewerbungsformularfelder",
+    "admin.settings.job.requireCoverLetter": "Anschreiben erforderlich",
+    "admin.settings.job.requirePhone": "Telefonnummer erforderlich",
+    "admin.settings.job.requireResume": "Lebenslauf erforderlich",
+
+    // SEO settings
+    "admin.settings.seo.metaTitle": "Meta-Titel",
+    "admin.settings.seo.metaDescription": "Meta-Beschreibung",
+    "admin.settings.seo.ogImage": "OG-Bild",
+    "admin.settings.seo.uploadOgImage": "OG-Bild hochladen",
+    "admin.settings.seo.enableSitemap": "Sitemap aktivieren",
+    "admin.settings.seo.robotsTxt": "robots.txt",
   },
   en: {
     // Navigation
@@ -221,6 +403,7 @@ export const translations = {
     "nav.login": "Login",
     "nav.register": "Register",
     "nav.profile": "Profile",
+    "nav.admin": "Admin",
     "nav.logout": "Logout",
 
     // Hero
@@ -419,5 +602,180 @@ export const translations = {
     language: "Language",
     "language.de": "German",
     "language.en": "English",
+
+    // Profile
+    "profile.editProfile": "Edit Profile",
+    "profile.personalInfo": "Personal Information",
+    "profile.firstName": "First Name",
+    "profile.lastName": "Last Name",
+    "profile.email": "Email",
+    "profile.firstNamePlaceholder": "Your first name",
+    "profile.lastNamePlaceholder": "Your last name",
+    "profile.emailNotEditable": "Email address cannot be changed",
+    "profile.updateSuccess": "Success",
+    "profile.profileUpdated": "Your profile has been updated successfully",
+    "profile.updateError": "Error",
+    "profile.somethingWentWrong": "Something went wrong. Please try again",
+
+    // Password Change
+    "profile.changePassword": "Change Password",
+    "profile.currentPassword": "Current Password",
+    "profile.newPassword": "New Password",
+    "profile.confirmNewPassword": "Confirm New Password",
+    "profile.currentPasswordPlaceholder": "Enter your current password",
+    "profile.newPasswordPlaceholder": "Enter your new password",
+    "profile.confirmPasswordPlaceholder": "Confirm your new password",
+    "profile.passwordUpdateSuccess": "Success",
+    "profile.passwordUpdated": "Your password has been updated successfully",
+    "profile.changing": "Changing...",
+    "profile.allFieldsRequired": "All fields are required",
+    "profile.passwordMismatch": "New password and confirmation do not match",
+    "profile.passwordTooShort":
+      "New password must be at least 8 characters long",
+
+    // Admin translations for English
+    "admin.dashboard.title": "Dashboard",
+    "admin.dashboard.subtitle":
+      "Overview of all important metrics and activities",
+    "admin.loading": "Loading...",
+
+    // Admin navigation and general admin translations for English
+    "admin.navigation.dashboard": "Dashboard",
+    "admin.navigation.users": "Users",
+    "admin.navigation.contacts": "Contacts",
+    "admin.navigation.applications": "Applications",
+    "admin.navigation.analytics": "Analytics",
+    "admin.navigation.settings": "Settings",
+    "admin.logout": "Logout",
+    "admin.openSidebar": "Open sidebar",
+    "admin.closeSidebar": "Close sidebar",
+
+    // Stats
+    "admin.stats.users": "Users",
+    "admin.stats.contacts": "Contact Requests",
+    "admin.stats.applications": "Applications",
+    "admin.stats.pageViews": "Page Views",
+    "admin.stats.sinceLastMonth": "since last month",
+
+    // Analytics
+    "admin.analytics.title": "Website Analytics",
+    "admin.analytics.pageViews": "Page Views",
+    "admin.analytics.visitors": "Visitors",
+
+    // Recent Contacts
+    "admin.contacts.recentTitle": "Recent Contact Requests",
+    "admin.contacts.viewAll": "View all contact requests",
+    "admin.contacts.name": "Name",
+    "admin.contacts.email": "Email",
+    "admin.contacts.service": "Service",
+    "admin.contacts.date": "Date",
+    "admin.contacts.status": "Status",
+    "admin.contacts.statusNew": "New",
+    "admin.contacts.statusInProgress": "In Progress",
+    "admin.contacts.statusCompleted": "Completed",
+    "admin.contacts.noContacts": "No contact requests found",
+
+    // Recent Applications
+    "admin.applications.recentTitle": "Recent Applications",
+    "admin.applications.viewAll": "View all applications",
+    "admin.applications.name": "Name",
+    "admin.applications.email": "Email",
+    "admin.applications.position": "Position",
+    "admin.applications.date": "Date",
+    "admin.applications.status": "Status",
+    "admin.applications.statusNew": "New",
+    "admin.applications.statusReviewing": "Reviewing",
+    "admin.applications.statusInterviewed": "Interviewed",
+    "admin.applications.statusHired": "Hired",
+    "admin.applications.statusRejected": "Rejected",
+    "admin.applications.noApplications": "No applications found",
+
+    // Add these translations for English
+    "admin.users.title": "User Management",
+    "admin.users.subtitle": "Manage all user accounts",
+    "admin.users.newUser": "New User",
+    "admin.users.searchPlaceholder": "Search for users...",
+    "admin.users.user": "User",
+    "admin.users.role": "Role",
+    "admin.users.emailStatus": "Email Status",
+    "admin.users.registered": "Registered",
+    "admin.users.actions": "Actions",
+    "admin.users.noUsersFound": "No users found",
+    "admin.users.verified": "Verified",
+    "admin.users.unverified": "Unverified",
+    "admin.users.editUser": "Edit User",
+    "admin.users.editUserDescription":
+      "Make changes to the user here. Click save when you're done.",
+    "admin.users.name": "Name",
+    "admin.users.email": "Email",
+    "admin.users.roleUser": "User",
+    "admin.users.roleTeacher": "Teacher",
+    "admin.users.roleAdmin": "Admin",
+    "admin.users.cancel": "Cancel",
+    "admin.users.save": "Save",
+    "admin.users.createUser": "Create User",
+    "admin.users.createUserDescription":
+      "Add a new user to the system. A temporary password will be generated.",
+    "admin.users.create": "Create",
+    "admin.users.deleteUser": "Delete User",
+    "admin.users.deleteUserDescription":
+      "Are you sure you want to delete this user? This action cannot be undone.",
+    "admin.users.deleteUserConfirm": "You are about to delete:",
+    "admin.users.delete": "Delete",
+    "admin.users.previous": "Previous",
+    "admin.users.next": "Next",
+
+    // Admin Settings page
+    "admin.settings.title": "Settings",
+    "admin.settings.subtitle": "Configure your website settings",
+    "admin.settings.general": "General",
+    "admin.settings.contact": "Contact",
+    "admin.settings.job": "Job Offers",
+    "admin.settings.seo": "SEO",
+    "admin.settings.save": "Save Settings",
+    "admin.settings.saving": "Saving...",
+    "admin.settings.success": "Success",
+    "admin.settings.success.message": "Settings have been saved successfully.",
+    "admin.settings.error": "Error",
+    "admin.settings.error.message": "An error occurred while saving settings.",
+
+    // General settings
+    "admin.settings.general.siteName": "Site Name",
+    "admin.settings.general.siteDescription": "Site Description",
+    "admin.settings.general.logo": "Logo",
+    "admin.settings.general.favicon": "Favicon",
+    "admin.settings.general.uploadLogo": "Upload Logo",
+    "admin.settings.general.uploadFavicon": "Upload Favicon",
+    "admin.settings.general.maintenanceMode": "Enable Maintenance Mode",
+    "admin.settings.general.maintenanceMessage": "Maintenance Message",
+    "admin.settings.general.googleAnalytics": "Google Analytics ID",
+
+    // Contact settings
+    "admin.settings.contact.email": "Email Address",
+    "admin.settings.contact.phone": "Phone Number",
+    "admin.settings.contact.address": "Address",
+    "admin.settings.contact.showSocialLinks": "Show Social Media Links",
+    "admin.settings.contact.socialLinks": "Social Media Links",
+    "admin.settings.contact.facebook": "Facebook",
+    "admin.settings.contact.instagram": "Instagram",
+    "admin.settings.contact.linkedin": "LinkedIn",
+    "admin.settings.contact.twitter": "Twitter",
+
+    // Job settings
+    "admin.settings.job.enableApplications": "Enable Applications",
+    "admin.settings.job.notificationEmail": "Notification Email",
+    "admin.settings.job.automaticResponses": "Automatic Responses",
+    "admin.settings.job.applicationFormFields": "Application Form Fields",
+    "admin.settings.job.requireCoverLetter": "Require Cover Letter",
+    "admin.settings.job.requirePhone": "Require Phone Number",
+    "admin.settings.job.requireResume": "Require Resume",
+
+    // SEO settings
+    "admin.settings.seo.metaTitle": "Meta Title",
+    "admin.settings.seo.metaDescription": "Meta Description",
+    "admin.settings.seo.ogImage": "OG Image",
+    "admin.settings.seo.uploadOgImage": "Upload OG Image",
+    "admin.settings.seo.enableSitemap": "Enable Sitemap",
+    "admin.settings.seo.robotsTxt": "robots.txt",
   },
 };

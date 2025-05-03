@@ -1,14 +1,23 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/lib/db";
-import { getCurrentUser } from "@/lib/auth";
+import { getServerSession } from "next-auth/next";
+import { authOptions, getCurrentUser } from "@/lib/auth";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    // Check if user is admin
-    const user = await getCurrentUser();
+    // Try both authentication methods
+    const session = await getServerSession(authOptions);
+    const currentUser = await getCurrentUser();
 
-    if (!user || user.role !== "admin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Check if user is authenticated and is an admin
+    const isAdmin =
+      session?.user?.role === "admin" || currentUser?.role === "admin";
+
+    if (!isAdmin) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 403 }
+      );
     }
 
     const client = await clientPromise;

@@ -8,6 +8,7 @@ import { useI18n } from "@/lib/i18n/i18n-context";
 import LanguageSwitcher from "./language-switcher";
 import ThemeSwitcher from "./theme-switcher";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +17,12 @@ export default function Navbar() {
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
   const { t } = useI18n();
+  const { isAuthenticated, isAdmin, logout, refreshAuth } = useAuth();
+
+  // Refresh auth status when path changes
+  useEffect(() => {
+    refreshAuth();
+  }, [pathname, refreshAuth]);
 
   // Handle scroll events for navbar appearance and active section highlighting
   useEffect(() => {
@@ -210,26 +217,66 @@ export default function Navbar() {
               <ThemeSwitcher />
             </div>
             <div className="h-6 w-px bg-gray-300 dark:bg-gray-700 mx-1"></div>
-            <Link
-              href="/login"
-              className={cn(
-                "px-3 py-1.5 text-sm font-medium transition-colors",
-                scrolled || !isHomePage
-                  ? "text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400"
-                  : "text-white hover:text-gray-200"
-              )}>
-              {t("nav.login")}
-            </Link>
-            <Link
-              href="/register"
-              className={cn(
-                "px-4 py-1.5 text-sm font-medium rounded-md transition-colors",
-                scrolled || !isHomePage
-                  ? "bg-violet-600 text-white hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-600"
-                  : "bg-white text-violet-700 hover:bg-gray-100"
-              )}>
-              {t("nav.register")}
-            </Link>
+
+            {isAuthenticated ? (
+              <>
+                {isAdmin && (
+                  <Link
+                    href="/admin/dashboard"
+                    className={cn(
+                      "px-3 py-1.5 text-sm font-medium transition-colors",
+                      scrolled || !isHomePage
+                        ? "text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400"
+                        : "text-white hover:text-gray-200"
+                    )}>
+                    {t("nav.admin")}
+                  </Link>
+                )}
+                <Link
+                  href="/profile"
+                  className={cn(
+                    "px-3 py-1.5 text-sm font-medium transition-colors",
+                    scrolled || !isHomePage
+                      ? "text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400"
+                      : "text-white hover:text-gray-200"
+                  )}>
+                  {t("nav.profile")}
+                </Link>
+                <button
+                  onClick={logout}
+                  className={cn(
+                    "px-4 py-1.5 text-sm font-medium rounded-md transition-colors",
+                    scrolled || !isHomePage
+                      ? "bg-violet-600 text-white hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-600"
+                      : "bg-white text-violet-700 hover:bg-gray-100"
+                  )}>
+                  {t("nav.logout")}
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className={cn(
+                    "px-3 py-1.5 text-sm font-medium transition-colors",
+                    scrolled || !isHomePage
+                      ? "text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400"
+                      : "text-white hover:text-gray-200"
+                  )}>
+                  {t("nav.login")}
+                </Link>
+                <Link
+                  href="/register"
+                  className={cn(
+                    "px-4 py-1.5 text-sm font-medium rounded-md transition-colors",
+                    scrolled || !isHomePage
+                      ? "bg-violet-600 text-white hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-600"
+                      : "bg-white text-violet-700 hover:bg-gray-100"
+                  )}>
+                  {t("nav.register")}
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -294,18 +341,47 @@ export default function Navbar() {
           </div>
 
           <div className="p-4 border-t border-gray-200 dark:border-gray-800 space-y-2">
-            <Link
-              href="/login"
-              className="block w-full px-4 py-2 text-center rounded-md text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              onClick={closeMenu}>
-              {t("nav.login")}
-            </Link>
-            <Link
-              href="/register"
-              className="block w-full px-4 py-2 text-center rounded-md bg-violet-600 text-white hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-600 transition-colors"
-              onClick={closeMenu}>
-              {t("nav.register")}
-            </Link>
+            {isAuthenticated ? (
+              <>
+                {isAdmin && (
+                  <Link
+                    href="/admin/dashboard"
+                    className="block w-full px-4 py-2 text-center rounded-md text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    onClick={closeMenu}>
+                    {t("nav.admin")}
+                  </Link>
+                )}
+                <Link
+                  href="/profile"
+                  className="block w-full px-4 py-2 text-center rounded-md bg-violet-600 text-white hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-600 transition-colors"
+                  onClick={closeMenu}>
+                  {t("nav.profile")}
+                </Link>
+                <button
+                  onClick={() => {
+                    closeMenu();
+                    logout();
+                  }}
+                  className="block w-full px-4 py-2 text-center rounded-md bg-violet-600 text-white hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-600 transition-colors">
+                  {t("nav.logout")}
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="block w-full px-4 py-2 text-center rounded-md text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  onClick={closeMenu}>
+                  {t("nav.login")}
+                </Link>
+                <Link
+                  href="/register"
+                  className="block w-full px-4 py-2 text-center rounded-md bg-violet-600 text-white hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-600 transition-colors"
+                  onClick={closeMenu}>
+                  {t("nav.register")}
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -19,6 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import { Loader2, Save, UploadCloud } from "lucide-react";
+import { useI18n } from "@/lib/i18n/i18n-context";
 
 interface ContactSettings {
   email: string;
@@ -70,6 +71,7 @@ interface Settings {
 }
 
 export default function SettingsPage() {
+  const { t } = useI18n();
   const [settings, setSettings] = useState<Settings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -200,27 +202,24 @@ export default function SettingsPage() {
 
       if (data.success) {
         toast({
-          title: "Erfolg",
-          description: "Die Einstellungen wurden erfolgreich gespeichert.",
+          title: t("admin.settings.success"),
+          description: t("admin.settings.success.message"),
         });
         setLogoFile(null);
         setFaviconFile(null);
         setOgImageFile(null);
       } else {
         toast({
-          title: "Fehler",
-          description:
-            data.message ||
-            "Beim Speichern der Einstellungen ist ein Fehler aufgetreten.",
+          title: t("admin.settings.error"),
+          description: data.message || t("admin.settings.error.message"),
           variant: "destructive",
         });
       }
     } catch (error) {
       console.error("Error saving settings:", error);
       toast({
-        title: "Fehler",
-        description:
-          "Beim Speichern der Einstellungen ist ein Fehler aufgetreten.",
+        title: t("admin.settings.error"),
+        description: t("admin.settings.error.message"),
         variant: "destructive",
       });
     } finally {
@@ -369,10 +368,10 @@ export default function SettingsPage() {
     <AdminLayout>
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Einstellungen</h1>
-          <p className="text-gray-500">
-            Konfigurieren Sie Ihre Website-Einstellungen
-          </p>
+          <h1 className="text-2xl font-bold text-gray-900">
+            {t("admin.settings.title")}
+          </h1>
+          <p className="text-gray-500">{t("admin.settings.subtitle")}</p>
         </div>
         <Button
           onClick={handleSaveSettings}
@@ -380,12 +379,12 @@ export default function SettingsPage() {
           {saving ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Speichern...
+              {t("admin.settings.saving")}
             </>
           ) : (
             <>
               <Save className="mr-2 h-4 w-4" />
-              Einstellungen speichern
+              {t("admin.settings.save")}
             </>
           )}
         </Button>
@@ -395,364 +394,349 @@ export default function SettingsPage() {
         defaultValue="general"
         value={activeTab}
         onValueChange={setActiveTab}>
-        <TabsList className="mb-6">
-          <TabsTrigger value="general">Allgemein</TabsTrigger>
-          <TabsTrigger value="contact">Kontakt</TabsTrigger>
-          <TabsTrigger value="job">Stellenangebote</TabsTrigger>
-          <TabsTrigger value="seo">SEO</TabsTrigger>
-        </TabsList>
+        <div className="bg-white rounded-lg shadow">
+          <div className="p-4 border-b">
+            <TabsList className="grid grid-cols-4 gap-4">
+              <TabsTrigger value="general">
+                {t("admin.settings.general")}
+              </TabsTrigger>
+              <TabsTrigger value="contact">
+                {t("admin.settings.contact")}
+              </TabsTrigger>
+              <TabsTrigger value="job">{t("admin.settings.job")}</TabsTrigger>
+              <TabsTrigger value="seo">{t("admin.settings.seo")}</TabsTrigger>
+            </TabsList>
+          </div>
 
-        <TabsContent value="general">
-          <Card>
-            <CardHeader>
-              <CardTitle>Allgemeine Einstellungen</CardTitle>
-              <CardDescription>
-                Grundlegende Einstellungen für Ihre Website
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid gap-6 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="siteName">Website-Name</Label>
-                  <Input
-                    id="siteName"
-                    value={settings.general.siteName}
-                    onChange={(e) =>
-                      updateGeneralSettings("siteName", e.target.value)
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="siteDescription">Website-Beschreibung</Label>
-                  <Input
-                    id="siteDescription"
-                    value={settings.general.siteDescription}
-                    onChange={(e) =>
-                      updateGeneralSettings("siteDescription", e.target.value)
-                    }
-                  />
-                </div>
-              </div>
-
-              <Separator />
-
-              <div className="grid gap-6 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="logo">Logo</Label>
-                  <div className="flex items-center gap-4">
-                    {settings.general.logo && (
-                      <img
-                        src={settings.general.logo}
-                        alt="Logo"
-                        className="w-16 h-16 object-contain border rounded p-1"
-                      />
-                    )}
-                    <div className="flex-1">
-                      <Label
-                        htmlFor="logo-upload"
-                        className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed rounded-md cursor-pointer hover:border-gray-400">
-                        <UploadCloud className="w-6 h-6 text-gray-400" />
-                        <span className="mt-2 text-sm text-gray-500">
-                          {logoFile ? logoFile.name : "Logo hochladen"}
-                        </span>
-                      </Label>
-                      <Input
-                        id="logo-upload"
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) => handleFileChange(e, "logo")}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="favicon">Favicon</Label>
-                  <div className="flex items-center gap-4">
-                    {settings.general.favicon && (
-                      <img
-                        src={settings.general.favicon}
-                        alt="Favicon"
-                        className="w-8 h-8 object-contain border rounded p-1"
-                      />
-                    )}
-                    <div className="flex-1">
-                      <Label
-                        htmlFor="favicon-upload"
-                        className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed rounded-md cursor-pointer hover:border-gray-400">
-                        <UploadCloud className="w-6 h-6 text-gray-400" />
-                        <span className="mt-2 text-sm text-gray-500">
-                          {faviconFile ? faviconFile.name : "Favicon hochladen"}
-                        </span>
-                      </Label>
-                      <Input
-                        id="favicon-upload"
-                        type="file"
-                        accept="image/x-icon,image/png"
-                        className="hidden"
-                        onChange={(e) => handleFileChange(e, "favicon")}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <Separator />
-
-              <div className="space-y-2">
-                <Label htmlFor="googleAnalyticsId">Google Analytics ID</Label>
-                <Input
-                  id="googleAnalyticsId"
-                  value={settings.general.googleAnalyticsId}
-                  onChange={(e) =>
-                    updateGeneralSettings("googleAnalyticsId", e.target.value)
-                  }
-                  placeholder="z.B. G-XXXXXXXXXX oder UA-XXXXXXXX-X"
-                />
-              </div>
-
-              <Separator />
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label htmlFor="maintenance-mode">Wartungsmodus</Label>
-                    <p className="text-sm text-gray-500">
-                      Aktivieren Sie den Wartungsmodus, um Ihre Website
-                      vorübergehend zu sperren.
-                    </p>
-                  </div>
-                  <Switch
-                    id="maintenance-mode"
-                    checked={settings.general.enableMaintenanceMode}
-                    onCheckedChange={(checked) =>
-                      updateGeneralSettings("enableMaintenanceMode", checked)
-                    }
-                  />
-                </div>
-
-                {settings.general.enableMaintenanceMode && (
+          {/* General Settings Tab */}
+          <TabsContent
+            value="general"
+            className="p-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>{t("admin.settings.general")}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="maintenanceMessage">Wartungsmeldung</Label>
+                    <Label htmlFor="siteName">
+                      {t("admin.settings.general.siteName")}
+                    </Label>
+                    <Input
+                      id="siteName"
+                      value={settings?.general.siteName || ""}
+                      onChange={(e) =>
+                        updateGeneralSettings("siteName", e.target.value)
+                      }
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="siteDescription">
+                      {t("admin.settings.general.siteDescription")}
+                    </Label>
                     <Textarea
-                      id="maintenanceMessage"
-                      value={settings.general.maintenanceMessage}
+                      id="siteDescription"
+                      value={settings?.general.siteDescription || ""}
+                      onChange={(e) =>
+                        updateGeneralSettings("siteDescription", e.target.value)
+                      }
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>{t("admin.settings.general.logo")}</Label>
+                    <div className="flex items-center space-x-4">
+                      {settings?.general.logo && (
+                        <img
+                          src={settings.general.logo}
+                          alt="Logo"
+                          className="h-12 w-auto"
+                        />
+                      )}
+                      <div className="flex-grow">
+                        <div className="relative">
+                          <Input
+                            id="logo"
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => handleFileChange(e, "logo")}
+                          />
+                          <Label
+                            htmlFor="logo"
+                            className="cursor-pointer flex items-center justify-center gap-2 p-2 border border-dashed border-gray-300 rounded-md text-sm">
+                            <UploadCloud size={16} />
+                            {t("admin.settings.general.uploadLogo")}
+                          </Label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>{t("admin.settings.general.favicon")}</Label>
+                    <div className="flex items-center space-x-4">
+                      {settings?.general.favicon && (
+                        <img
+                          src={settings.general.favicon}
+                          alt="Favicon"
+                          className="h-8 w-auto"
+                        />
+                      )}
+                      <div className="flex-grow">
+                        <div className="relative">
+                          <Input
+                            id="favicon"
+                            type="file"
+                            accept="image/x-icon,image/png"
+                            className="hidden"
+                            onChange={(e) => handleFileChange(e, "favicon")}
+                          />
+                          <Label
+                            htmlFor="favicon"
+                            className="cursor-pointer flex items-center justify-center gap-2 p-2 border border-dashed border-gray-300 rounded-md text-sm">
+                            <UploadCloud size={16} />
+                            {t("admin.settings.general.uploadFavicon")}
+                          </Label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="maintenanceMode"
+                      checked={settings?.general.enableMaintenanceMode || false}
+                      onCheckedChange={(checked) =>
+                        updateGeneralSettings("enableMaintenanceMode", checked)
+                      }
+                    />
+                    <Label htmlFor="maintenanceMode">
+                      {t("admin.settings.general.maintenanceMode")}
+                    </Label>
+                  </div>
+
+                  {settings?.general.enableMaintenanceMode && (
+                    <div className="space-y-2">
+                      <Label htmlFor="maintenanceMessage">
+                        {t("admin.settings.general.maintenanceMessage")}
+                      </Label>
+                      <Textarea
+                        id="maintenanceMessage"
+                        value={settings.general.maintenanceMessage || ""}
+                        onChange={(e) =>
+                          updateGeneralSettings(
+                            "maintenanceMessage",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <Label htmlFor="googleAnalyticsId">
+                      {t("admin.settings.general.googleAnalytics")}
+                    </Label>
+                    <Input
+                      id="googleAnalyticsId"
+                      value={settings?.general.googleAnalyticsId || ""}
                       onChange={(e) =>
                         updateGeneralSettings(
-                          "maintenanceMessage",
+                          "googleAnalyticsId",
                           e.target.value
                         )
                       }
-                      rows={3}
                     />
                   </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="contact">
-          <Card>
-            <CardHeader>
-              <CardTitle>Kontakteinstellungen</CardTitle>
-              <CardDescription>
-                Kontaktinformationen und soziale Medien
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid gap-6 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="contactEmail">Kontakt-E-Mail</Label>
-                  <Input
-                    id="contactEmail"
-                    type="email"
-                    value={settings.contact.email}
-                    onChange={(e) =>
-                      updateContactSettings("email", e.target.value)
-                    }
-                  />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="contactPhone">Telefonnummer</Label>
-                  <Input
-                    id="contactPhone"
-                    value={settings.contact.phone}
-                    onChange={(e) =>
-                      updateContactSettings("phone", e.target.value)
-                    }
-                  />
-                </div>
-              </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-              <div className="space-y-2">
-                <Label htmlFor="contactAddress">Adresse</Label>
-                <Textarea
-                  id="contactAddress"
-                  value={settings.contact.address}
-                  onChange={(e) =>
-                    updateContactSettings("address", e.target.value)
-                  }
-                  rows={3}
-                />
-              </div>
-
-              <Separator />
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label htmlFor="showSocialLinks">
-                      Soziale Medien anzeigen
+          {/* Contact Settings Tab */}
+          <TabsContent
+            value="contact"
+            className="p-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>{t("admin.settings.contact")}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">
+                      {t("admin.settings.contact.email")}
                     </Label>
-                    <p className="text-sm text-gray-500">
-                      Zeigen Sie Links zu Ihren sozialen Medien auf der Website
-                      an.
-                    </p>
+                    <Input
+                      id="email"
+                      value={settings?.contact.email || ""}
+                      onChange={(e) =>
+                        updateContactSettings("email", e.target.value)
+                      }
+                    />
                   </div>
-                  <Switch
-                    id="showSocialLinks"
-                    checked={settings.contact.showSocialLinks}
-                    onCheckedChange={(checked) =>
-                      updateContactSettings("showSocialLinks", checked)
-                    }
-                  />
-                </div>
 
-                {settings.contact.showSocialLinks && (
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="facebook">Facebook</Label>
-                      <Input
-                        id="facebook"
-                        value={settings.contact.socialLinks.facebook}
-                        onChange={(e) =>
-                          updateSocialLink("facebook", e.target.value)
-                        }
-                        placeholder="https://facebook.com/ihre-seite"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="instagram">Instagram</Label>
-                      <Input
-                        id="instagram"
-                        value={settings.contact.socialLinks.instagram}
-                        onChange={(e) =>
-                          updateSocialLink("instagram", e.target.value)
-                        }
-                        placeholder="https://instagram.com/ihr-account"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="linkedin">LinkedIn</Label>
-                      <Input
-                        id="linkedin"
-                        value={settings.contact.socialLinks.linkedin}
-                        onChange={(e) =>
-                          updateSocialLink("linkedin", e.target.value)
-                        }
-                        placeholder="https://linkedin.com/company/ihre-firma"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="twitter">Twitter</Label>
-                      <Input
-                        id="twitter"
-                        value={settings.contact.socialLinks.twitter}
-                        onChange={(e) =>
-                          updateSocialLink("twitter", e.target.value)
-                        }
-                        placeholder="https://twitter.com/ihr-account"
-                      />
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">
+                      {t("admin.settings.contact.phone")}
+                    </Label>
+                    <Input
+                      id="phone"
+                      value={settings?.contact.phone || ""}
+                      onChange={(e) =>
+                        updateContactSettings("phone", e.target.value)
+                      }
+                    />
                   </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
 
-        <TabsContent value="job">
-          <Card>
-            <CardHeader>
-              <CardTitle>Stellenangebote-Einstellungen</CardTitle>
-              <CardDescription>
-                Konfigurieren Sie den Bewerbungsprozess
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="enableApplications">
-                    Bewerbungen aktivieren
-                  </Label>
-                  <p className="text-sm text-gray-500">
-                    Aktivieren Sie Online-Bewerbungen auf Ihrer Website.
-                  </p>
+                  <div className="space-y-2">
+                    <Label htmlFor="address">
+                      {t("admin.settings.contact.address")}
+                    </Label>
+                    <Textarea
+                      id="address"
+                      value={settings?.contact.address || ""}
+                      onChange={(e) =>
+                        updateContactSettings("address", e.target.value)
+                      }
+                    />
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="showSocialLinks"
+                      checked={settings?.contact.showSocialLinks || false}
+                      onCheckedChange={(checked) =>
+                        updateContactSettings("showSocialLinks", checked)
+                      }
+                    />
+                    <Label htmlFor="showSocialLinks">
+                      {t("admin.settings.contact.showSocialLinks")}
+                    </Label>
+                  </div>
+
+                  {settings?.contact.showSocialLinks && (
+                    <div className="space-y-4">
+                      <h3 className="text-sm font-medium">
+                        {t("admin.settings.contact.socialLinks")}
+                      </h3>
+                      <div className="space-y-2">
+                        <Label htmlFor="facebook">
+                          {t("admin.settings.contact.facebook")}
+                        </Label>
+                        <Input
+                          id="facebook"
+                          value={settings?.contact.socialLinks?.facebook || ""}
+                          onChange={(e) =>
+                            updateSocialLink("facebook", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="instagram">
+                          {t("admin.settings.contact.instagram")}
+                        </Label>
+                        <Input
+                          id="instagram"
+                          value={settings?.contact.socialLinks?.instagram || ""}
+                          onChange={(e) =>
+                            updateSocialLink("instagram", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="linkedin">
+                          {t("admin.settings.contact.linkedin")}
+                        </Label>
+                        <Input
+                          id="linkedin"
+                          value={settings?.contact.socialLinks?.linkedin || ""}
+                          onChange={(e) =>
+                            updateSocialLink("linkedin", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="twitter">
+                          {t("admin.settings.contact.twitter")}
+                        </Label>
+                        <Input
+                          id="twitter"
+                          value={settings?.contact.socialLinks?.twitter || ""}
+                          onChange={(e) =>
+                            updateSocialLink("twitter", e.target.value)
+                          }
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <Switch
-                  id="enableApplications"
-                  checked={settings.job.enableApplications}
-                  onCheckedChange={(checked) =>
-                    updateJobSettings("enableApplications", checked)
-                  }
-                />
-              </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-              {settings.job.enableApplications && (
-                <>
+          {/* Job Settings Tab */}
+          <TabsContent
+            value="job"
+            className="p-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>{t("admin.settings.job")}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="enableApplications"
+                      checked={settings?.job.enableApplications || false}
+                      onCheckedChange={(checked) =>
+                        updateJobSettings("enableApplications", checked)
+                      }
+                    />
+                    <Label htmlFor="enableApplications">
+                      {t("admin.settings.job.enableApplications")}
+                    </Label>
+                  </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="notificationEmail">
-                      Benachrichtigungs-E-Mail
+                      {t("admin.settings.job.notificationEmail")}
                     </Label>
                     <Input
                       id="notificationEmail"
-                      type="email"
-                      value={settings.job.notificationEmail}
+                      value={settings?.job.notificationEmail || ""}
                       onChange={(e) =>
                         updateJobSettings("notificationEmail", e.target.value)
                       }
-                      placeholder="bewerbungen@ihre-firma.de"
                     />
-                    <p className="text-xs text-gray-500">
-                      An diese E-Mail-Adresse werden Benachrichtigungen über
-                      neue Bewerbungen gesendet.
-                    </p>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label htmlFor="automaticResponses">
-                        Automatische Antworten
-                      </Label>
-                      <p className="text-sm text-gray-500">
-                        Senden Sie automatische Bestätigungsmails nach dem
-                        Eingang von Bewerbungen.
-                      </p>
-                    </div>
+                  <div className="flex items-center space-x-2">
                     <Switch
                       id="automaticResponses"
-                      checked={settings.job.automaticResponses}
+                      checked={settings?.job.automaticResponses || false}
                       onCheckedChange={(checked) =>
                         updateJobSettings("automaticResponses", checked)
                       }
                     />
+                    <Label htmlFor="automaticResponses">
+                      {t("admin.settings.job.automaticResponses")}
+                    </Label>
                   </div>
 
-                  <Separator />
-
-                  <div>
-                    <h3 className="text-sm font-medium mb-4">
-                      Pflichtfelder im Bewerbungsformular
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-medium">
+                      {t("admin.settings.job.applicationFormFields")}
                     </h3>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="requireCoverLetter">Anschreiben</Label>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
                         <Switch
                           id="requireCoverLetter"
                           checked={
-                            settings.job.applicationFormFields
-                              .requireCoverLetter
+                            settings?.job.applicationFormFields
+                              ?.requireCoverLetter || false
                           }
                           onCheckedChange={(checked) =>
                             updateApplicationField(
@@ -761,138 +745,147 @@ export default function SettingsPage() {
                             )
                           }
                         />
+                        <Label htmlFor="requireCoverLetter">
+                          {t("admin.settings.job.requireCoverLetter")}
+                        </Label>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="requirePhone">Telefonnummer</Label>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
                         <Switch
                           id="requirePhone"
                           checked={
-                            settings.job.applicationFormFields.requirePhone
+                            settings?.job.applicationFormFields?.requirePhone ||
+                            false
                           }
                           onCheckedChange={(checked) =>
                             updateApplicationField("requirePhone", checked)
                           }
                         />
+                        <Label htmlFor="requirePhone">
+                          {t("admin.settings.job.requirePhone")}
+                        </Label>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="requireResume">Lebenslauf-Upload</Label>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
                         <Switch
                           id="requireResume"
                           checked={
-                            settings.job.applicationFormFields.requireResume
+                            settings?.job.applicationFormFields
+                              ?.requireResume || false
                           }
                           onCheckedChange={(checked) =>
                             updateApplicationField("requireResume", checked)
                           }
                         />
+                        <Label htmlFor="requireResume">
+                          {t("admin.settings.job.requireResume")}
+                        </Label>
                       </div>
                     </div>
                   </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="seo">
-          <Card>
-            <CardHeader>
-              <CardTitle>SEO-Einstellungen</CardTitle>
-              <CardDescription>
-                Suchmaschinenoptimierung und soziale Medien
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid gap-6 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="metaTitle">Meta-Titel</Label>
-                  <Input
-                    id="metaTitle"
-                    value={settings.seo.metaTitle}
-                    onChange={(e) =>
-                      updateSeoSettings("metaTitle", e.target.value)
-                    }
-                  />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="metaDescription">Meta-Beschreibung</Label>
-                  <Textarea
-                    id="metaDescription"
-                    value={settings.seo.metaDescription}
-                    onChange={(e) =>
-                      updateSeoSettings("metaDescription", e.target.value)
-                    }
-                    rows={2}
-                  />
-                </div>
-              </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-              <div className="space-y-2">
-                <Label htmlFor="ogImage">Social Media Bild (OG Image)</Label>
-                <div className="flex items-center gap-4">
-                  {settings.seo.ogImage && (
-                    <img
-                      src={settings.seo.ogImage}
-                      alt="OG Image"
-                      className="w-32 h-16 object-cover border rounded p-1"
-                    />
-                  )}
-                  <div className="flex-1">
-                    <Label
-                      htmlFor="ogimage-upload"
-                      className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed rounded-md cursor-pointer hover:border-gray-400">
-                      <UploadCloud className="w-6 h-6 text-gray-400" />
-                      <span className="mt-2 text-sm text-gray-500">
-                        {ogImageFile
-                          ? ogImageFile.name
-                          : "OG Image hochladen (1200x630 empfohlen)"}
-                      </span>
+          {/* SEO Settings Tab */}
+          <TabsContent
+            value="seo"
+            className="p-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>{t("admin.settings.seo")}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="metaTitle">
+                      {t("admin.settings.seo.metaTitle")}
                     </Label>
                     <Input
-                      id="ogimage-upload"
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => handleFileChange(e, "ogImage")}
+                      id="metaTitle"
+                      value={settings?.seo.metaTitle || ""}
+                      onChange={(e) =>
+                        updateSeoSettings("metaTitle", e.target.value)
+                      }
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="metaDescription">
+                      {t("admin.settings.seo.metaDescription")}
+                    </Label>
+                    <Textarea
+                      id="metaDescription"
+                      value={settings?.seo.metaDescription || ""}
+                      onChange={(e) =>
+                        updateSeoSettings("metaDescription", e.target.value)
+                      }
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>{t("admin.settings.seo.ogImage")}</Label>
+                    <div className="flex items-center space-x-4">
+                      {settings?.seo.ogImage && (
+                        <img
+                          src={settings.seo.ogImage}
+                          alt="OG Image"
+                          className="h-16 w-auto rounded"
+                        />
+                      )}
+                      <div className="flex-grow">
+                        <div className="relative">
+                          <Input
+                            id="ogImage"
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => handleFileChange(e, "ogImage")}
+                          />
+                          <Label
+                            htmlFor="ogImage"
+                            className="cursor-pointer flex items-center justify-center gap-2 p-2 border border-dashed border-gray-300 rounded-md text-sm">
+                            <UploadCloud size={16} />
+                            {t("admin.settings.seo.uploadOgImage")}
+                          </Label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="enableSitemap"
+                      checked={settings?.seo.enableSitemap || false}
+                      onCheckedChange={(checked) =>
+                        updateSeoSettings("enableSitemap", checked)
+                      }
+                    />
+                    <Label htmlFor="enableSitemap">
+                      {t("admin.settings.seo.enableSitemap")}
+                    </Label>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="robotsTxt">
+                      {t("admin.settings.seo.robotsTxt")}
+                    </Label>
+                    <Textarea
+                      id="robotsTxt"
+                      value={settings?.seo.robotsTxt || ""}
+                      onChange={(e) =>
+                        updateSeoSettings("robotsTxt", e.target.value)
+                      }
                     />
                   </div>
                 </div>
-              </div>
-
-              <Separator />
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="enableSitemap">Sitemap aktivieren</Label>
-                  <p className="text-sm text-gray-500">
-                    Generieren Sie automatisch eine sitemap.xml-Datei für
-                    Suchmaschinen.
-                  </p>
-                </div>
-                <Switch
-                  id="enableSitemap"
-                  checked={settings.seo.enableSitemap}
-                  onCheckedChange={(checked) =>
-                    updateSeoSettings("enableSitemap", checked)
-                  }
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="robotsTxt">robots.txt Inhalt</Label>
-                <Textarea
-                  id="robotsTxt"
-                  value={settings.seo.robotsTxt}
-                  onChange={(e) =>
-                    updateSeoSettings("robotsTxt", e.target.value)
-                  }
-                  rows={5}
-                  className="font-mono text-sm"
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </div>
       </Tabs>
     </AdminLayout>
   );

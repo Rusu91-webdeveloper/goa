@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { authOptions, getCurrentUser } from "@/lib/auth";
 import { writeFile } from "fs/promises";
 import path from "path";
 import { mkdir } from "fs/promises";
@@ -8,10 +8,15 @@ import { mkdir } from "fs/promises";
 // POST /api/admin/uploads - Upload files
 export async function POST(req: NextRequest) {
   try {
+    // Try both authentication methods
     const session = await getServerSession(authOptions);
+    const currentUser = await getCurrentUser();
 
     // Check if user is authenticated and is an admin
-    if (!session || session.user.role !== "admin") {
+    const isAdmin =
+      session?.user?.role === "admin" || currentUser?.role === "admin";
+
+    if (!isAdmin) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
         { status: 403 }

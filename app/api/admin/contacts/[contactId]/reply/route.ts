@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
-import Contact from "@/models/Contact";
+import ContactModel from "@/models/ContactModel";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 import { sendEmail } from "@/lib/email";
 
 // POST /api/admin/contacts/[contactId]/reply - Send a reply to a contact
@@ -11,10 +12,15 @@ export async function POST(
   { params }: { params: { contactId: string } }
 ) {
   try {
+    // Try both authentication methods
     const session = await getServerSession(authOptions);
+    const currentUser = await getCurrentUser();
 
     // Check if user is authenticated and is an admin
-    if (!session || session.user.role !== "admin") {
+    const isAdmin =
+      session?.user?.role === "admin" || currentUser?.role === "admin";
+
+    if (!isAdmin) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
         { status: 403 }
@@ -34,7 +40,7 @@ export async function POST(
     await connectToDatabase();
 
     // Find contact
-    const contact = await Contact.findById(contactId);
+    const contact = await ContactModel.findById(contactId);
 
     if (!contact) {
       return NextResponse.json(
@@ -48,22 +54,23 @@ export async function POST(
       await sendEmail({
         to: contact.email,
         subject: "Antwort auf Ihre Anfrage bei GOA",
-        text: replyText,
         html: replyText.replace(/\n/g, "<br />"),
       });
 
-      // Update contact status to completed and add reply to history
-      contact.status = "completed";
+      // Update contact status to resolved and add reply to history
+      contact.status = "resolved";
 
-      // Add reply to contact history if it doesn't exist
+      // Add reply to contact history
       if (!contact.replies) {
         contact.replies = [];
       }
 
+      // Get user email from either auth method
+      const userEmail = session?.user?.email || currentUser?.email;
+
       contact.replies.push({
-        text: replyText,
-        sentAt: new Date(),
-        sentBy: session.user.email,
+        date: new Date(),
+        message: replyText,
       });
 
       await contact.save();

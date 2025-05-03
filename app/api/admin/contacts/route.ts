@@ -1,16 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
-import Contact from "@/models/Contact";
+import ContactModel from "@/models/ContactModel";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 
 // GET /api/admin/contacts - Get all contacts with pagination, search, and filtering
 export async function GET(req: NextRequest) {
   try {
+    // Try both authentication methods
     const session = await getServerSession(authOptions);
+    const currentUser = await getCurrentUser();
 
     // Check if user is authenticated and is an admin
-    if (!session || session.user.role !== "admin") {
+    const isAdmin =
+      session?.user?.role === "admin" || currentUser?.role === "admin";
+
+    if (!isAdmin) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
         { status: 403 }
@@ -46,14 +52,14 @@ export async function GET(req: NextRequest) {
     }
 
     // Get contacts with pagination
-    const contacts = await Contact.find(searchQuery)
+    const contacts = await ContactModel.find(searchQuery)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .lean();
 
     // Get total count for pagination
-    const total = await Contact.countDocuments(searchQuery);
+    const total = await ContactModel.countDocuments(searchQuery);
     const totalPages = Math.ceil(total / limit);
 
     return NextResponse.json({

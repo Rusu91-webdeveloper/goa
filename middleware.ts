@@ -5,6 +5,14 @@ import { jwtVerify } from "jose";
 // Define protected routes
 const protectedRoutes = ["/admin", "/profile"];
 
+// Cookie options to match how it was set
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  path: "/",
+};
+
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
@@ -31,7 +39,10 @@ export async function middleware(request: NextRequest) {
     } catch (error) {
       // If token is invalid, redirect to login
       const response = NextResponse.redirect(new URL("/login", request.url));
-      response.cookies.delete("goa_auth_token");
+      response.cookies.delete({
+        name: "goa_auth_token",
+        ...COOKIE_OPTIONS,
+      });
       return response;
     }
   }

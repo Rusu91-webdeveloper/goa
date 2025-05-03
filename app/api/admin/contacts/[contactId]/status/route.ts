@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
-import Contact from "@/models/Contact";
+import ContactModel from "@/models/ContactModel";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 
 // PUT /api/admin/contacts/[contactId]/status - Update a contact's status
 export async function PUT(
@@ -10,10 +11,15 @@ export async function PUT(
   { params }: { params: { contactId: string } }
 ) {
   try {
+    // Try both authentication methods
     const session = await getServerSession(authOptions);
+    const currentUser = await getCurrentUser();
 
     // Check if user is authenticated and is an admin
-    if (!session || session.user.role !== "admin") {
+    const isAdmin =
+      session?.user?.role === "admin" || currentUser?.role === "admin";
+
+    if (!isAdmin) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
         { status: 403 }
@@ -24,7 +30,10 @@ export async function PUT(
     const { status } = await req.json();
 
     // Validate status
-    if (!status || !["new", "inProgress", "completed"].includes(status)) {
+    if (
+      !status ||
+      !["new", "inProgress", "resolved", "archived"].includes(status)
+    ) {
       return NextResponse.json(
         { success: false, message: "Invalid status" },
         { status: 400 }
@@ -34,7 +43,7 @@ export async function PUT(
     await connectToDatabase();
 
     // Find and update contact
-    const contact = await Contact.findById(contactId);
+    const contact = await ContactModel.findById(contactId);
 
     if (!contact) {
       return NextResponse.json(
@@ -51,7 +60,8 @@ export async function PUT(
       message: "Contact status updated successfully",
       contact: {
         _id: contact._id,
-        name: contact.name,
+        firstName: contact.firstName,
+        lastName: contact.lastName,
         email: contact.email,
         message: contact.message,
         status: contact.status,

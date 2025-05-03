@@ -11,7 +11,7 @@ export default function VerifyEmailPage({
   params: { token: string };
 }) {
   const router = useRouter();
-  const { token } = params;
+  const token = params.token;
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     "loading"
   );

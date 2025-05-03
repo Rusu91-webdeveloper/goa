@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
-import Contact from "@/models/Contact";
+import ContactModel from "@/models/ContactModel";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 
 // GET /api/admin/contacts/[contactId] - Get a specific contact
 export async function GET(
@@ -10,10 +11,15 @@ export async function GET(
   { params }: { params: { contactId: string } }
 ) {
   try {
+    // Try both authentication methods
     const session = await getServerSession(authOptions);
+    const currentUser = await getCurrentUser();
 
     // Check if user is authenticated and is an admin
-    if (!session || session.user.role !== "admin") {
+    const isAdmin =
+      session?.user?.role === "admin" || currentUser?.role === "admin";
+
+    if (!isAdmin) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
         { status: 403 }
@@ -24,7 +30,7 @@ export async function GET(
 
     await connectToDatabase();
 
-    const contact = await Contact.findById(contactId).lean();
+    const contact = await ContactModel.findById(contactId).lean();
 
     if (!contact) {
       return NextResponse.json(
@@ -52,10 +58,15 @@ export async function DELETE(
   { params }: { params: { contactId: string } }
 ) {
   try {
+    // Try both authentication methods
     const session = await getServerSession(authOptions);
+    const currentUser = await getCurrentUser();
 
     // Check if user is authenticated and is an admin
-    if (!session || session.user.role !== "admin") {
+    const isAdmin =
+      session?.user?.role === "admin" || currentUser?.role === "admin";
+
+    if (!isAdmin) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
         { status: 403 }
@@ -66,7 +77,7 @@ export async function DELETE(
 
     await connectToDatabase();
 
-    const result = await Contact.findByIdAndDelete(contactId);
+    const result = await ContactModel.findByIdAndDelete(contactId);
 
     if (!result) {
       return NextResponse.json(
