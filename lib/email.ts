@@ -1,0 +1,216 @@
+import nodemailer from "nodemailer";
+
+// In a real app, these would be environment variables
+const EMAIL_HOST = process.env.EMAIL_HOST || "smtp.example.com";
+const EMAIL_PORT = Number.parseInt(process.env.EMAIL_PORT || "587");
+const EMAIL_USER = process.env.EMAIL_USER || "user@example.com";
+const EMAIL_PASS = process.env.EMAIL_PASS || "password";
+const EMAIL_FROM =
+  process.env.EMAIL_FROM ||
+  "GOA Erwachsenenbildung <noreply@goa-erwachsenenbildung.de>";
+
+// Create a transporter
+const transporter = nodemailer.createTransport({
+  host: EMAIL_HOST,
+  port: EMAIL_PORT,
+  secure: EMAIL_PORT === 465,
+  auth: {
+    user: EMAIL_USER,
+    pass: EMAIL_PASS,
+  },
+});
+
+export async function sendVerificationEmail(
+  to: string,
+  token: string
+): Promise<void> {
+  const verificationUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-email/${token}`;
+
+  await transporter.sendMail({
+    from: EMAIL_FROM,
+    to,
+    subject: "Bestätigen Sie Ihre E-Mail-Adresse",
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #047857;">Willkommen bei GOA Erwachsenenbildung!</h2>
+        <p>Vielen Dank für Ihre Registrierung. Bitte bestätigen Sie Ihre E-Mail-Adresse, indem Sie auf den folgenden Link klicken:</p>
+        <p style="margin: 20px 0;">
+          <a href="${verificationUrl}" style="background-color: #047857; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+            E-Mail-Adresse bestätigen
+          </a>
+        </p>
+        <p>Oder kopieren Sie diesen Link in Ihren Browser:</p>
+        <p>${verificationUrl}</p>
+        <p>Dieser Link ist 24 Stunden gültig.</p>
+        <p>Wenn Sie sich nicht bei uns registriert haben, können Sie diese E-Mail ignorieren.</p>
+        <p>Mit freundlichen Grüßen,<br>Das GOA Erwachsenenbildung Team</p>
+      </div>
+    `,
+  });
+}
+
+export async function sendPasswordResetEmail(
+  to: string,
+  token: string
+): Promise<void> {
+  const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password/${token}`;
+
+  await transporter.sendMail({
+    from: EMAIL_FROM,
+    to,
+    subject: "Passwort zurücksetzen",
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #047857;">Passwort zurücksetzen</h2>
+        <p>Sie haben eine Anfrage zum Zurücksetzen Ihres Passworts gestellt. Bitte klicken Sie auf den folgenden Link, um Ihr Passwort zurückzusetzen:</p>
+        <p style="margin: 20px 0;">
+          <a href="${resetUrl}" style="background-color: #047857; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+            Passwort zurücksetzen
+          </a>
+        </p>
+        <p>Oder kopieren Sie diesen Link in Ihren Browser:</p>
+        <p>${resetUrl}</p>
+        <p>Dieser Link ist 1 Stunde gültig.</p>
+        <p>Wenn Sie keine Anfrage zum Zurücksetzen Ihres Passworts gestellt haben, können Sie diese E-Mail ignorieren.</p>
+        <p>Mit freundlichen Grüßen,<br>Das GOA Erwachsenenbildung Team</p>
+      </div>
+    `,
+  });
+}
+
+export async function sendContactNotification(contactData: any): Promise<void> {
+  await transporter.sendMail({
+    from: EMAIL_FROM,
+    to: process.env.ADMIN_EMAIL || "admin@example.com",
+    subject: "Neue Kontaktanfrage",
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #047857;">Neue Kontaktanfrage</h2>
+        <p>Es wurde eine neue Kontaktanfrage über das Formular auf der Website eingereicht:</p>
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Firma:</strong></td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+              contactData.company || "-"
+            }</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Name:</strong></td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+              contactData.lastName || "-"
+            }</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Vorname:</strong></td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+              contactData.firstName || "-"
+            }</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>E-Mail:</strong></td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+              contactData.email || "-"
+            }</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Telefon:</strong></td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+              contactData.phone || "-"
+            }</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Dienstleistung:</strong></td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+              contactData.service || "-"
+            }</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Nachricht:</strong></td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+              contactData.message || "-"
+            }</td>
+          </tr>
+        </table>
+      </div>
+    `,
+  });
+}
+
+export async function sendJobApplicationNotification(
+  applicationData: any
+): Promise<void> {
+  await transporter.sendMail({
+    from: EMAIL_FROM,
+    to: process.env.ADMIN_EMAIL || "admin@example.com",
+    subject: "Neue Bewerbung",
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #047857;">Neue Bewerbung</h2>
+        <p>Es wurde eine neue Bewerbung über die Website eingereicht:</p>
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Name:</strong></td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+              applicationData.lastName || "-"
+            }</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Vorname:</strong></td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+              applicationData.firstName || "-"
+            }</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>E-Mail:</strong></td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+              applicationData.email || "-"
+            }</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Telefon:</strong></td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+              applicationData.phone || "-"
+            }</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Qualifikationen:</strong></td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+              applicationData.qualifications?.join(", ") || "-"
+            }</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Nachricht:</strong></td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+              applicationData.message || "-"
+            }</td>
+          </tr>
+        </table>
+      </div>
+    `,
+  });
+}
+
+interface EmailOptions {
+  to: string;
+  subject: string;
+  html: string;
+}
+
+export async function sendEmail({ to, subject, html }: EmailOptions) {
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT),
+    secure: true,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASSWORD,
+    },
+  });
+
+  await transporter.sendMail({
+    from: process.env.SMTP_FROM,
+    to,
+    subject,
+    html,
+  });
+}
