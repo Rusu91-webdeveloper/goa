@@ -3,6 +3,8 @@ import { connectToDatabase } from "@/lib/mongodb";
 import { getServerSession } from "next-auth/next";
 import { authOptions, getCurrentUser } from "@/lib/auth";
 import mongoose from "mongoose";
+import { writeFile } from "fs/promises";
+import path from "path";
 
 // Define a schema for job applications
 const JobApplicationSchema = new mongoose.Schema({
@@ -53,35 +55,54 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // In a real implementation, you would handle file uploads here
-    // using a service like AWS S3, Cloudinary, or similar
-
-    // For demo purposes, we'll assume we have a direct URL to the resume
-    // In a production app, you would:
-    // 1. Parse the multipart form data
-    // 2. Upload the file to a storage service
-    // 3. Store the URL in the database
-
-    // Parse request body (this is simplified - real implementation would handle multipart form data)
-    const body = await req.json();
+    // Parse the multipart form data
+    const formData = await req.formData();
+    const jobId = formData.get("jobId") as string;
+    const coverLetter = formData.get("coverLetter") as string;
+    const resumeFile = formData.get("resume") as File;
 
     // Validate required fields
-    if (!body.jobId || !body.coverLetter) {
+    if (!jobId || !coverLetter || !resumeFile) {
       return NextResponse.json(
         { success: false, message: "Missing required fields" },
         { status: 400 }
       );
     }
 
+    // Create uploads directory if it doesn't exist
+    const uploadDir = path.join(process.cwd(), "public/uploads");
+    try {
+      await writeFile(path.join(uploadDir, "test.txt"), "test");
+    } catch (error) {
+      console.error("Error creating uploads directory:", error);
+      return NextResponse.json(
+        { success: false, message: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    // Generate a unique filename
+    const fileExtension = resumeFile.name.split(".").pop();
+    const uniqueFilename = `${userId}-${Date.now()}.${fileExtension}`;
+    const filePath = path.join(uploadDir, uniqueFilename);
+
+    // Convert File to Buffer and save it
+    const bytes = await resumeFile.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    await writeFile(filePath, buffer);
+
+    // Generate the URL for the uploaded file
+    const resumeUrl = `/uploads/${uniqueFilename}`;
+
     // Connect to database
     await connectToDatabase();
 
     // Create new job application
     const jobApplication = await JobApplication.create({
-      userId: body.userId || userId,
-      jobId: body.jobId,
-      coverLetter: body.coverLetter,
-      resumeUrl: body.resumeUrl || "https://example.com/placeholder.pdf", // In a real app, this would be the URL from your file upload
+      userId,
+      jobId,
+      coverLetter,
+      resumeUrl,
     });
 
     return NextResponse.json(

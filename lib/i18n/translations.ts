@@ -509,9 +509,40 @@ export const translations = {
     "dashboard.jobs.title": "Stellenangebote",
     "dashboard.jobs.description":
       "Durchsuchen Sie aktuelle Stellenangebote und bewerben Sie sich online.",
-    "dashboard.myApplications.title": "Meine Bewerbungen",
-    "dashboard.myApplications.description":
-      "Überblick über Ihre eingereichten Bewerbungen",
+    "dashboard.jobs.intro":
+      "Entdecken Sie unsere aktuellen Stellenangebote und finden Sie Ihre nächste berufliche Herausforderung.",
+    "dashboard.jobs.allJobs": "Alle Stellen",
+    "dashboard.jobs.teaching": "Lehrkräfte",
+    "dashboard.jobs.admin": "Verwaltung",
+    "dashboard.jobs.noJobs": "Aktuell sind keine Stellen verfügbar.",
+    "dashboard.jobs.viewDetails": "Details anzeigen",
+    "dashboard.jobs.apply": "Jetzt bewerben",
+    "dashboard.jobs.applyForJob": "Auf Stelle bewerben",
+    "dashboard.jobs.applicationConfirmed": "Bewerbung bestätigt",
+    "dashboard.jobs.applicationSuccess": "Bewerbung erfolgreich",
+    "dashboard.jobs.applicationConfirmation":
+      "Ihre Bewerbung wurde erfolgreich eingereicht",
+    "dashboard.jobs.applicationError": "Bewerbungsfehler",
+    "dashboard.jobs.applicationErrorMessage":
+      "Bei der Bewerbung ist ein Fehler aufgetreten",
+    "dashboard.jobs.applicationSuccessDescription":
+      "Ihre Bewerbung wurde erfolgreich eingereicht",
+    "dashboard.jobs.thankYou":
+      "Vielen Dank für Ihre Bewerbung. Wir werden uns in Kürze bei Ihnen melden.",
+    "dashboard.jobs.coverLetter": "Anschreiben",
+    "dashboard.jobs.coverLetterPlaceholder":
+      "Beschreiben Sie, warum Sie sich für diese Position interessieren...",
+    "dashboard.jobs.resume": "Lebenslauf",
+    "dashboard.jobs.dragAndDrop":
+      "Ziehen Sie Ihre Datei hierher oder klicken Sie zum Auswählen",
+    "dashboard.jobs.browseFiles": "Dateien durchsuchen",
+    "dashboard.jobs.formError":
+      "Bitte füllen Sie alle erforderlichen Felder aus",
+    "dashboard.jobs.resumeRequired": "Bitte laden Sie Ihren Lebenslauf hoch",
+    "dashboard.jobs.submitting": "Wird eingereicht...",
+    "dashboard.jobs.submitApplication": "Bewerbung absenden",
+    "dashboard.jobs.error": "Fehler",
+    "dashboard.jobs.cancel": "Abbrechen",
 
     // Common UI elements
     "common.save": "Speichern",
@@ -1024,9 +1055,39 @@ export const translations = {
     // Dashboard Jobs Tab
     "dashboard.jobs.title": "Job Offers",
     "dashboard.jobs.description": "Browse current job offers and apply online.",
-    "dashboard.myApplications.title": "My Applications",
-    "dashboard.myApplications.description":
-      "Overview of your submitted applications",
+    "dashboard.jobs.intro":
+      "Discover our current job openings and find your next career opportunity.",
+    "dashboard.jobs.allJobs": "All Jobs",
+    "dashboard.jobs.teaching": "Teaching",
+    "dashboard.jobs.admin": "Administration",
+    "dashboard.jobs.noJobs": "No jobs are currently available.",
+    "dashboard.jobs.viewDetails": "View Details",
+    "dashboard.jobs.apply": "Apply Now",
+    "dashboard.jobs.applyForJob": "Apply for Position",
+    "dashboard.jobs.applicationConfirmed": "Application Confirmed",
+    "dashboard.jobs.applicationSuccess": "Application Successful",
+    "dashboard.jobs.applicationConfirmation":
+      "Your application has been successfully submitted",
+    "dashboard.jobs.applicationError": "Application Error",
+    "dashboard.jobs.applicationErrorMessage":
+      "An error occurred while submitting your application",
+    "dashboard.jobs.applicationSuccessDescription":
+      "Your application has been successfully submitted",
+    "dashboard.jobs.thankYou":
+      "Thank you for your application. We will contact you shortly.",
+    "dashboard.jobs.coverLetter": "Cover Letter",
+    "dashboard.jobs.coverLetterPlaceholder":
+      "Describe why you are interested in this position...",
+    "dashboard.jobs.resume": "Resume",
+    "dashboard.jobs.dragAndDrop":
+      "Drag and drop your file here or click to browse",
+    "dashboard.jobs.browseFiles": "Browse Files",
+    "dashboard.jobs.formError": "Please fill in all required fields",
+    "dashboard.jobs.resumeRequired": "Please upload your resume",
+    "dashboard.jobs.submitting": "Submitting...",
+    "dashboard.jobs.submitApplication": "Submit Application",
+    "dashboard.jobs.error": "Error",
+    "dashboard.jobs.cancel": "Cancel",
 
     // Common UI elements
     "common.save": "Save",

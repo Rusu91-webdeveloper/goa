@@ -1,5 +1,4 @@
-import { config } from "dotenv";
-config(); // Load the environment variables from .env file
+import "dotenv/config"; // Load the environment variables from .env file
 
 import { hashPassword } from "@/lib/auth";
 import clientPromise from "@/lib/db";
@@ -16,7 +15,8 @@ async function createAdminUser() {
     // Admin user data
     const adminData = {
       _id: new ObjectId(),
-      name: "Admin",
+      firstName: "Admin",
+      lastName: "User",
       email: "admin@goa-website.com",
       password: await hashPassword("admin123"), // You should change this password
       role: "admin",

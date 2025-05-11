@@ -1,0 +1,80 @@
+.custom-calendar {
+  --rdp-cell-size: 40px;
+  --rdp-accent-color: #7c3aed;
+  --rdp-background-color: #f3f4f6;
+  --rdp-accent-color-dark: #6d28d9;
+  --rdp-background-color-dark: #1f2937;
+  --rdp-outline: 2px solid var(--rdp-accent-color);
+  --rdp-outline-selected: 3px solid var(--rdp-accent-color);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto;
+}
+
+.custom-calendar .rdp-months {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.dark .custom-calendar .rdp-months {
+  background-color: #1f2937;
+}
+
+.custom-calendar .rdp-day_selected,
+.custom-calendar .rdp-day_selected:focus-visible,
+.custom-calendar .rdp-day_selected:hover {
+  background-color: var(--rdp-accent-color);
+  color: white;
+}
+
+.custom-calendar .rdp-day_today {
+  font-weight: bold;
+  color: var(--rdp-accent-color);
+}
+
+.custom-calendar .rdp-day:hover:not(.rdp-day_selected) {
+  background-color: var(--rdp-background-color);
+  color: var(--rdp-accent-color);
+}
+
+.dark .custom-calendar .rdp-day:hover:not(.rdp-day_selected) {
+  background-color: var(--rdp-background-color-dark);
+}
+
+.custom-calendar .rdp-head_cell {
+  font-weight: 600;
+  color: var(--rdp-accent-color);
+  font-size: 0.875rem;
+}
+
+.custom-calendar .rdp-nav_button {
+  color: var(--rdp-accent-color);
+}
+
+.custom-calendar .rdp-nav_button:hover {
+  background-color: var(--rdp-background-color);
+}
+
+.dark .custom-calendar .rdp-nav_button:hover {
+  background-color: var(--rdp-background-color-dark);
+}
+
+.custom-calendar .rdp-day_disabled {
+  opacity: 0.5;
+}
+
+.custom-calendar .rdp-day_outside {
+  opacity: 0.5;
+}
+
+.custom-calendar .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
+  background-color: var(--rdp-background-color);
+  color: var(--rdp-accent-color);
+}
+
+.dark
+  .custom-calendar
+  .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
+  background-color: var(--rdp-background-color-dark);
+}

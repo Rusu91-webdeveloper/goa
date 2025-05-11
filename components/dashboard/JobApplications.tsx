@@ -41,39 +41,38 @@ interface JobApplicationsProps {
 const jobs = [
   {
     id: "teacher-bamf",
-    title: "BAMF-Lehrkraft",
     category: "teaching",
+    title: "BAMF-Lehrkraft",
     location: "Berlin",
     type: "Vollzeit",
     description:
-      "Unterricht in Integrationskursen mit BAMF-Zulassung. Erfahrung im Unterrichten von Erwachsenen erforderlich.",
+      "Wir suchen qualifizierte BAMF-Lehrkräfte für Integrationskurse und berufsbezogene Sprachkurse.",
   },
   {
     id: "teacher-daf",
-    title: "DaF/DaZ-Lehrkraft",
     category: "teaching",
+    title: "DaF/DaZ-Lehrkraft",
     location: "Brandenburg",
     type: "Teilzeit",
     description:
-      "Deutsch als Fremdsprache/Zweitsprache Lehrkraft für verschiedene Niveaustufen. Flexible Arbeitszeiten.",
+      "Für unsere Sprachkurse suchen wir erfahrene DaF/DaZ-Lehrkräfte.",
   },
   {
     id: "teacher-alpha",
-    title: "Alpha-Lehrkraft",
     category: "teaching",
+    title: "Alpha-Lehrkraft",
     location: "Berlin",
     type: "Teilzeit",
-    description:
-      "Alphabetisierungskurse für Erwachsene mit geringen Deutschkenntnissen. Spezialkenntnisse in der Alphabetisierung erforderlich.",
+    description: "Lehrkraft für Alphabetisierungskurse gesucht.",
   },
   {
     id: "admin-assistant",
-    title: "Verwaltungsassistenz",
     category: "admin",
+    title: "Verwaltungsassistenz",
     location: "Berlin",
     type: "Vollzeit",
     description:
-      "Administrative Unterstützung im Schulbüro. Gute Deutschkenntnisse und organisatorisches Talent erforderlich.",
+      "Zur Verstärkung unseres Teams suchen wir eine Verwaltungsassistenz.",
   },
 ];
 
@@ -133,17 +132,17 @@ export default function JobApplications({
     setIsSubmitting(true);
 
     try {
-      // In a real app, this would be an API call with FormData to upload the file
+      // Create FormData for file upload
       const formData = new FormData();
       formData.append("userId", userId);
       formData.append("jobId", selectedJob);
       formData.append("coverLetter", coverLetter);
       formData.append("resume", resumeFile);
 
-      // Make an actual API call
+      // Make the API call with FormData
       const response = await fetch("/api/job-applications", {
         method: "POST",
-        body: formData,
+        body: formData, // Send as FormData instead of JSON
       });
 
       if (!response.ok) {
