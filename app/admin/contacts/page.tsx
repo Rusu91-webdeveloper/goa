@@ -211,7 +211,7 @@ export default function ContactsPage() {
 
   return (
     <AdminLayout>
-      <div className="mb-6">
+      <div className="mb-6 mt-12">
         <h1 className="text-2xl font-bold text-gray-900">Kontaktanfragen</h1>
         <p className="text-gray-500">
           Verwalten Sie eingehende Kontaktanfragen

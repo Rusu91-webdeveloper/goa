@@ -21,19 +21,20 @@ import { useI18n } from "@/lib/i18n/i18n-context";
 import { AlertCircle, ArrowLeft, Loader2, Mail } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-const formSchema = z.object({
-  email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein"),
-});
-
-type FormData = z.infer<typeof formSchema>;
-
 export default function ForgotPasswordForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
   const { toast } = useToast();
-  const { t } = useI18n();
+  const { t, language } = useI18n();
+
+  // Define schema with localized error messages
+  const formSchema = z.object({
+    email: z.string().email(t("auth.email.invalid")),
+  });
+
+  type FormData = z.infer<typeof formSchema>;
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -54,23 +55,19 @@ export default function ForgotPasswordForm() {
       });
 
       if (!response.ok) {
-        throw new Error("Ein Fehler ist aufgetreten");
+        throw new Error(t("auth.forgot.error"));
       }
 
       setIsSubmitted(true);
       toast({
-        title: "E-Mail gesendet",
-        description:
-          "Bitte überprüfen Sie Ihren Posteingang für weitere Anweisungen.",
+        title: t("auth.forgot.emailSent"),
+        description: t("auth.forgot.checkInbox"),
       });
     } catch (error) {
-      setErrorMessage(
-        "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
-      );
+      setErrorMessage(t("auth.forgot.error.server"));
       toast({
-        title: "Fehler",
-        description:
-          "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.",
+        title: t("auth.error"),
+        description: t("auth.forgot.error.server"),
         variant: "destructive",
       });
     } finally {
@@ -84,23 +81,18 @@ export default function ForgotPasswordForm() {
         <div className="rounded-md bg-green-50 dark:bg-green-900/20 p-4 text-sm text-green-800 dark:text-green-300">
           <div className="flex items-center">
             <Mail className="h-5 w-5 mr-2 flex-shrink-0" />
-            <p>
-              Wir haben Ihnen eine E-Mail mit einem Link zum Zurücksetzen Ihres
-              Passworts gesendet.
-            </p>
+            <p>{t("auth.forgot.emailSentConfirmation")}</p>
           </div>
         </div>
         <p className="text-sm text-gray-600 dark:text-gray-400">
-          Bitte überprüfen Sie Ihren Posteingang und folgen Sie den Anweisungen
-          in der E-Mail. Falls Sie keine E-Mail erhalten haben, prüfen Sie bitte
-          auch Ihren Spam-Ordner.
+          {t("auth.forgot.checkInboxInstructions")}
         </p>
         <Button
           variant="outline"
           className="mt-2"
           onClick={() => router.push("/login")}>
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Zurück zum Login
+          {t("auth.backToLogin")}
         </Button>
       </div>
     );
@@ -124,7 +116,7 @@ export default function ForgotPasswordForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>E-Mail-Adresse</FormLabel>
+              <FormLabel>{t("auth.email")}</FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -146,10 +138,10 @@ export default function ForgotPasswordForm() {
           {isLoading ? (
             <div className="flex items-center justify-center">
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Wird gesendet...
+              {t("auth.forgot.sending")}
             </div>
           ) : (
-            "Link zum Zurücksetzen senden"
+            t("auth.forgot.sendResetLink")
           )}
         </Button>
 
@@ -157,7 +149,7 @@ export default function ForgotPasswordForm() {
           <Link
             href="/login"
             className="text-sm text-violet-600 hover:text-violet-800 dark:text-violet-400 dark:hover:text-violet-300">
-            Zurück zum Login
+            {t("auth.backToLogin")}
           </Link>
         </div>
       </form>

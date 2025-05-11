@@ -25,35 +25,35 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="#leitbild"
+                  href="/#leitbild"
                   className="text-gray-300 hover:text-white transition-colors">
                   {t("nav.leitbild")}
                 </Link>
               </li>
               <li>
                 <Link
-                  href="#about"
+                  href="/#about"
                   className="text-gray-300 hover:text-white transition-colors">
                   {t("nav.about")}
                 </Link>
               </li>
               <li>
                 <Link
-                  href="#services"
+                  href="/#services"
                   className="text-gray-300 hover:text-white transition-colors">
                   {t("nav.services")}
                 </Link>
               </li>
               <li>
                 <Link
-                  href="#jobs"
+                  href="/#jobs"
                   className="text-gray-300 hover:text-white transition-colors">
                   {t("nav.jobs")}
                 </Link>
               </li>
               <li>
                 <Link
-                  href="#contact"
+                  href="/#contact"
                   className="text-gray-300 hover:text-white transition-colors">
                   {t("nav.contact")}
                 </Link>

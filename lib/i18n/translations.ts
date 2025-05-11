@@ -182,6 +182,8 @@ export const translations = {
     "auth.password.required": "Passwort ist erforderlich",
     "auth.password.length": "Passwort muss mindestens 8 Zeichen lang sein",
     "auth.password.mismatch": "Passwörter stimmen nicht überein",
+    "auth.password.complexity":
+      "Das Passwort muss mindestens einen Großbuchstaben, einen Kleinbuchstaben und eine Zahl enthalten.",
     "auth.confirm.password": "Passwort bestätigen",
     "auth.forgot": "Passwort vergessen?",
     "auth.remember": "Angemeldet bleiben",
@@ -202,6 +204,35 @@ export const translations = {
     "auth.register.error.server":
       "Bei der Registrierung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
     "auth.register.submitting": "Wird registriert...",
+    "auth.error": "Fehler",
+    "auth.backToLogin": "Zurück zum Login",
+    "auth.sessionExpired": "Sitzung abgelaufen",
+    "auth.sessionExpiredMessage":
+      "Ihre Sitzung ist abgelaufen. Sie werden zur Anmeldeseite weitergeleitet.",
+    "auth.redirecting": "Weiterleitung...",
+    "auth.forgot.sendResetLink": "Link zum Zurücksetzen senden",
+    "auth.resetPassword.title": "Neues Passwort festlegen",
+    "auth.resetPassword.description":
+      "Erstellen Sie ein neues, sicheres Passwort für Ihr Konto.",
+    "auth.resetPassword.newPassword": "Neues Passwort",
+    "auth.resetPassword.confirmNewPassword": "Neues Passwort bestätigen",
+    "auth.resetPassword.newPasswordPlaceholder":
+      "Geben Sie Ihr neues Passwort ein",
+    "auth.resetPassword.confirmPasswordPlaceholder":
+      "Bestätigen Sie Ihr neues Passwort",
+    "auth.resetPassword.submitButton": "Passwort festlegen",
+    "auth.resetPassword.submittingButton": "Wird festgelegt...",
+    "auth.resetPassword.successTitle": "Passwort erfolgreich geändert",
+    "auth.resetPassword.successMessage":
+      "Ihr Passwort wurde erfolgreich aktualisiert. Sie können sich jetzt mit Ihrem neuen Passwort anmelden.",
+    "auth.resetPassword.errorTitle": "Fehler beim Zurücksetzen des Passworts",
+    "auth.resetPassword.invalidToken":
+      "Der Link zum Zurücksetzen des Passworts ist ungültig oder abgelaufen.",
+    "auth.resetPassword.passwordMismatch":
+      "Die Passwörter stimmen nicht überein.",
+    "auth.resetPassword.passwordTooShort":
+      "Das Passwort muss mindestens 8 Zeichen lang sein.",
+    "auth.resetPassword.backToLogin": "Zurück zum Login",
 
     // Theme
     "theme.dark": "Dunkelmodus",
@@ -319,7 +350,8 @@ export const translations = {
     "admin.users.editUser": "Benutzer bearbeiten",
     "admin.users.editUserDescription":
       "Aktualisieren Sie die Benutzerinformationen. Klicken Sie auf speichern wenn Sie fertig sind.",
-    "admin.users.name": "Name",
+    "admin.users.firstName": "Vorname",
+    "admin.users.lastName": "Nachname",
     "admin.users.email": "E-Mail",
     "admin.users.roleUser": "Benutzer",
     "admin.users.roleTeacher": "Lehrkraft",
@@ -328,8 +360,9 @@ export const translations = {
     "admin.users.save": "Speichern",
     "admin.users.createUser": "Neuen Benutzer erstellen",
     "admin.users.createUserDescription":
-      "Geben Sie die Informationen für den neuen Benutzer ein.",
+      "Fügen Sie einen neuen Benutzer hinzu. Sie können einen Link zum Festlegen des Passworts senden oder ein Konto mit einem temporären Passwort erstellen.",
     "admin.users.create": "Erstellen",
+    "admin.users.creating": "Wird erstellt...",
     "admin.users.deleteUser": "Benutzer löschen",
     "admin.users.deleteUserDescription":
       "Möchten Sie diesen Benutzer wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
@@ -338,6 +371,36 @@ export const translations = {
     "admin.users.delete": "Löschen",
     "admin.users.previous": "Zurück",
     "admin.users.next": "Weiter",
+    "admin.users.accountSetup": "Konto-Einrichtung",
+    "admin.users.sendResetLink": "Link zum Passwort-Setup senden",
+    "admin.users.resetLinkInfo":
+      "Der Benutzer erhält eine E-Mail mit einem Link zum Einrichten des eigenen Passworts",
+    "admin.users.tempPasswordInfo":
+      "Der Benutzer erhält eine E-Mail mit einem temporären Passwort",
+    "admin.users.success": "Erfolg",
+    "admin.users.error": "Fehler",
+    "admin.users.warning": "Warnung",
+    "admin.users.updateSuccess": "Benutzer erfolgreich aktualisiert",
+    "admin.users.updateError": "Fehler beim Aktualisieren des Benutzers",
+    "admin.users.createSuccessWithResetLink":
+      "Benutzer erstellt und Link zum Zurücksetzen des Passworts gesendet",
+    "admin.users.createSuccessWithTempPassword":
+      "Benutzer mit temporärem Passwort erstellt",
+    "admin.users.createSuccessEmailFailed":
+      "Benutzer erstellt, aber E-Mail konnte nicht gesendet werden. Siehe Zugangsdaten unten.",
+    "admin.users.createError": "Fehler beim Erstellen des Benutzers",
+    "admin.users.deleteSuccess": "Benutzer erfolgreich gelöscht",
+    "admin.users.deleteError": "Fehler beim Löschen des Benutzers",
+    "admin.users.emailSendFailed": "E-Mail konnte nicht gesendet werden",
+    "admin.users.shareCredentialsManually":
+      "Bitte teilen Sie diese Zugangsdaten manuell mit dem Benutzer:",
+    "admin.users.tempPassword": "Temporäres Passwort",
+    "admin.users.passwordResetLink": "Link zum Zurücksetzen des Passworts",
+    "admin.users.loginInstructions": "Benutzer sollte sich anmelden unter",
+    "admin.users.gotIt": "Verstanden, ich habe die Zugangsdaten geteilt",
+    "admin.users.copied": "Kopiert!",
+    "admin.users.copiedToClipboard": "In die Zwischenablage kopiert",
+    "admin.users.emailErrorDetails": "Fehlerdetails:",
 
     // Admin Settings page
     "admin.settings.title": "Einstellungen",
@@ -401,6 +464,13 @@ export const translations = {
     "dashboard.services": "Dienste",
     "dashboard.jobs": "Jobs",
     "dashboard.profile": "Profil",
+    "dashboard.myBookings": "Meine Buchungen",
+    "dashboard.myApplications": "Meine Bewerbungen",
+    "dashboard.shortServices": "Dienste",
+    "dashboard.shortJobs": "Jobs",
+    "dashboard.shortProfile": "Profil",
+    "dashboard.shortBookings": "Buchungen",
+    "dashboard.shortApps": "Bewerbungen",
 
     // Dashboard Services Tab
     "dashboard.services.title": "Dienste buchen",
@@ -432,50 +502,28 @@ export const translations = {
       "Ihre Buchung wurde erfolgreich eingereicht",
     "dashboard.services.thankYou":
       "Vielen Dank für Ihre Buchung. Wir werden Sie bald kontaktieren.",
+    "dashboard.myBookings.title": "Meine Buchungen",
+    "dashboard.myBookings.description": "Überblick über Ihre gebuchten Dienste",
 
     // Dashboard Jobs Tab
     "dashboard.jobs.title": "Stellenangebote",
     "dashboard.jobs.description":
       "Durchsuchen Sie aktuelle Stellenangebote und bewerben Sie sich online.",
-    "dashboard.jobs.intro":
-      "Entdecken Sie Karrieremöglichkeiten bei GOA und bewerben Sie sich jetzt.",
-    "dashboard.jobs.allJobs": "Alle Jobs",
-    "dashboard.jobs.teaching": "Lehrkräfte",
-    "dashboard.jobs.admin": "Verwaltung",
-    "dashboard.jobs.noJobs": "Keine Jobs in dieser Kategorie gefunden",
-    "dashboard.jobs.viewDetails": "Details anzeigen",
-    "dashboard.jobs.apply": "Bewerben",
-    "dashboard.jobs.applyForJob": "Für diese Stelle bewerben",
-    "dashboard.jobs.coverLetter": "Anschreiben",
-    "dashboard.jobs.coverLetterPlaceholder":
-      "Schreiben Sie hier Ihr Anschreiben...",
-    "dashboard.jobs.resume": "Lebenslauf",
-    "dashboard.jobs.dragAndDrop":
-      "Ziehen Sie Ihren Lebenslauf hierher oder klicken Sie, um eine Datei auszuwählen",
-    "dashboard.jobs.browseFiles": "Dateien durchsuchen",
-    "dashboard.jobs.cancel": "Abbrechen",
-    "dashboard.jobs.submitApplication": "Bewerbung einreichen",
-    "dashboard.jobs.submitting": "Wird eingereicht...",
-    "dashboard.jobs.error": "Fehler",
-    "dashboard.jobs.formError":
-      "Bitte füllen Sie alle erforderlichen Felder aus",
-    "dashboard.jobs.resumeRequired": "Bitte laden Sie Ihren Lebenslauf hoch",
-    "dashboard.jobs.applicationSuccess": "Bewerbung erfolgreich",
-    "dashboard.jobs.applicationConfirmation":
-      "Ihre Bewerbung wurde erfolgreich eingereicht",
-    "dashboard.jobs.applicationError": "Bewerbungsfehler",
-    "dashboard.jobs.applicationErrorMessage":
-      "Beim Einreichen Ihrer Bewerbung ist ein Fehler aufgetreten",
-    "dashboard.jobs.applicationConfirmed": "Bewerbung bestätigt",
-    "dashboard.jobs.applicationSuccessDescription":
-      "Ihre Bewerbung wurde erfolgreich eingereicht",
-    "dashboard.jobs.thankYou":
-      "Vielen Dank für Ihre Bewerbung. Wir werden Sie in Kürze kontaktieren.",
+    "dashboard.myApplications.title": "Meine Bewerbungen",
+    "dashboard.myApplications.description":
+      "Überblick über Ihre eingereichten Bewerbungen",
 
-    // Dashboard Profile Tab
-    "dashboard.profile.title": "Ihr Profil",
-    "dashboard.profile.description":
-      "Verwalten Sie Ihre persönlichen Informationen und Ihr Passwort.",
+    // Common UI elements
+    "common.save": "Speichern",
+    "common.saving": "Wird gespeichert...",
+    "common.cancel": "Abbrechen",
+    "common.confirm": "Bestätigen",
+    "common.submit": "Absenden",
+    "common.delete": "Löschen",
+    "common.edit": "Bearbeiten",
+    "common.back": "Zurück",
+    "common.next": "Weiter",
+    "common.loading": "Wird geladen...",
   },
   en: {
     // Navigation
@@ -657,14 +705,16 @@ export const translations = {
     "auth.password.required": "Password is required",
     "auth.password.length": "Password must be at least 8 characters long",
     "auth.password.mismatch": "Passwords do not match",
-    "auth.confirm.password": "Confirm Password",
+    "auth.password.complexity":
+      "Password must contain an uppercase letter, a lowercase letter, and a number.",
+    "auth.confirm.password": "Confirm password",
     "auth.forgot": "Forgot password?",
     "auth.remember": "Stay logged in",
     "auth.have.account": "Already registered?",
-    "auth.no.account": "Don't have an account?",
-    "auth.firstname": "First Name",
+    "auth.no.account": "Don't have an account yet?",
+    "auth.firstname": "First name",
     "auth.firstname.required": "First name is required",
-    "auth.lastname": "Last Name",
+    "auth.lastname": "Last name",
     "auth.lastname.required": "Last name is required",
     "auth.login.success": "Login successful!",
     "auth.login.error": "Invalid credentials.",
@@ -672,11 +722,38 @@ export const translations = {
       "An error occurred during login. Please try again later.",
     "auth.login.submitting": "Logging in...",
     "auth.register.success":
-      "Registration successful! Please check your email for the verification link.",
+      "Registration successful! Please check your email for the confirmation link.",
     "auth.register.error": "An error occurred during registration.",
     "auth.register.error.server":
       "An error occurred during registration. Please try again later.",
     "auth.register.submitting": "Registering...",
+    "auth.error": "Error",
+    "auth.backToLogin": "Back to login",
+    "auth.sessionExpired": "Session Expired",
+    "auth.sessionExpiredMessage":
+      "Your session has expired. You will be redirected to the login page.",
+    "auth.redirecting": "Redirecting...",
+    "auth.forgot.sendResetLink": "Send reset link",
+    "auth.resetPassword.title": "Set New Password",
+    "auth.resetPassword.description":
+      "Create a new, secure password for your account.",
+    "auth.resetPassword.newPassword": "New Password",
+    "auth.resetPassword.confirmNewPassword": "Confirm New Password",
+    "auth.resetPassword.newPasswordPlaceholder": "Enter your new password",
+    "auth.resetPassword.confirmPasswordPlaceholder":
+      "Confirm your new password",
+    "auth.resetPassword.submitButton": "Set Password",
+    "auth.resetPassword.submittingButton": "Setting...",
+    "auth.resetPassword.successTitle": "Password Changed Successfully",
+    "auth.resetPassword.successMessage":
+      "Your password has been updated. You can now log in with your new password.",
+    "auth.resetPassword.errorTitle": "Password Reset Error",
+    "auth.resetPassword.invalidToken":
+      "The password reset link is invalid or has expired.",
+    "auth.resetPassword.passwordMismatch": "The passwords do not match.",
+    "auth.resetPassword.passwordTooShort":
+      "Password must be at least 8 characters long.",
+    "auth.resetPassword.backToLogin": "Back to Login",
 
     // Theme
     "theme.dark": "Dark Mode",
@@ -793,7 +870,8 @@ export const translations = {
     "admin.users.editUser": "Edit User",
     "admin.users.editUserDescription":
       "Make changes to the user here. Click save when you're done.",
-    "admin.users.name": "Name",
+    "admin.users.firstName": "First Name",
+    "admin.users.lastName": "Last Name",
     "admin.users.email": "Email",
     "admin.users.roleUser": "User",
     "admin.users.roleTeacher": "Teacher",
@@ -802,8 +880,9 @@ export const translations = {
     "admin.users.save": "Save",
     "admin.users.createUser": "Create User",
     "admin.users.createUserDescription":
-      "Add a new user to the system. A temporary password will be generated.",
+      "Add a new user to the system. You can send them a password reset link or create an account with a temporary password.",
     "admin.users.create": "Create",
+    "admin.users.creating": "Creating...",
     "admin.users.deleteUser": "Delete User",
     "admin.users.deleteUserDescription":
       "Are you sure you want to delete this user? This action cannot be undone.",
@@ -811,6 +890,36 @@ export const translations = {
     "admin.users.delete": "Delete",
     "admin.users.previous": "Previous",
     "admin.users.next": "Next",
+    "admin.users.accountSetup": "Account Setup",
+    "admin.users.sendResetLink": "Send password setup link",
+    "admin.users.resetLinkInfo":
+      "User will receive an email with a link to set their own password",
+    "admin.users.tempPasswordInfo":
+      "User will receive an email with a temporary password",
+    "admin.users.success": "Success",
+    "admin.users.error": "Error",
+    "admin.users.warning": "Warning",
+    "admin.users.updateSuccess": "User updated successfully",
+    "admin.users.updateError": "Failed to update user",
+    "admin.users.createSuccessWithResetLink":
+      "User created and password reset link sent",
+    "admin.users.createSuccessWithTempPassword":
+      "User created with temporary password",
+    "admin.users.createSuccessEmailFailed":
+      "User created but email failed to send. See credentials below.",
+    "admin.users.createError": "Failed to create user",
+    "admin.users.deleteSuccess": "User deleted successfully",
+    "admin.users.deleteError": "Failed to delete user",
+    "admin.users.emailSendFailed": "Email Failed to Send",
+    "admin.users.shareCredentialsManually":
+      "Please share these credentials with the user manually:",
+    "admin.users.tempPassword": "Temporary Password",
+    "admin.users.passwordResetLink": "Password Reset Link",
+    "admin.users.loginInstructions": "User should login at",
+    "admin.users.gotIt": "Got it, I've shared the credentials",
+    "admin.users.copied": "Copied!",
+    "admin.users.copiedToClipboard": "Copied to clipboard",
+    "admin.users.emailErrorDetails": "Error details:",
 
     // Admin Settings page
     "admin.settings.title": "Settings",
@@ -871,6 +980,13 @@ export const translations = {
     "dashboard.services": "Services",
     "dashboard.jobs": "Jobs",
     "dashboard.profile": "Profile",
+    "dashboard.myBookings": "My Bookings",
+    "dashboard.myApplications": "My Applications",
+    "dashboard.shortServices": "Services",
+    "dashboard.shortJobs": "Jobs",
+    "dashboard.shortProfile": "Profile",
+    "dashboard.shortBookings": "Bookings",
+    "dashboard.shortApps": "Applications",
 
     // Dashboard Services Tab
     "dashboard.services.title": "Book Services",
@@ -902,47 +1018,26 @@ export const translations = {
       "Your booking has been successfully submitted",
     "dashboard.services.thankYou":
       "Thank you for your booking. We will contact you shortly.",
+    "dashboard.myBookings.title": "My Bookings",
+    "dashboard.myBookings.description": "Overview of your booked services",
 
     // Dashboard Jobs Tab
     "dashboard.jobs.title": "Job Offers",
-    "dashboard.jobs.description":
-      "Search for current job offers and apply online.",
-    "dashboard.jobs.intro":
-      "Discover career opportunities at GOA and apply now.",
-    "dashboard.jobs.allJobs": "All Jobs",
-    "dashboard.jobs.teaching": "Teachers",
-    "dashboard.jobs.admin": "Management",
-    "dashboard.jobs.noJobs": "No jobs found in this category",
-    "dashboard.jobs.viewDetails": "View Details",
-    "dashboard.jobs.apply": "Apply",
-    "dashboard.jobs.applyForJob": "Apply for this position",
-    "dashboard.jobs.coverLetter": "Cover Letter",
-    "dashboard.jobs.coverLetterPlaceholder": "Write your cover letter here...",
-    "dashboard.jobs.resume": "Resume",
-    "dashboard.jobs.dragAndDrop":
-      "Drag and drop your resume here or click to select a file",
-    "dashboard.jobs.browseFiles": "Browse Files",
-    "dashboard.jobs.cancel": "Cancel",
-    "dashboard.jobs.submitApplication": "Submit Application",
-    "dashboard.jobs.submitting": "Submitting...",
-    "dashboard.jobs.error": "Error",
-    "dashboard.jobs.formError": "Please fill out all required fields",
-    "dashboard.jobs.resumeRequired": "Please upload your resume",
-    "dashboard.jobs.applicationSuccess": "Application Successful",
-    "dashboard.jobs.applicationConfirmation":
-      "Your application has been successfully submitted",
-    "dashboard.jobs.applicationError": "Application Error",
-    "dashboard.jobs.applicationErrorMessage":
-      "An error occurred while submitting your application",
-    "dashboard.jobs.applicationConfirmed": "Application Confirmed",
-    "dashboard.jobs.applicationSuccessDescription":
-      "Your application has been successfully submitted",
-    "dashboard.jobs.thankYou":
-      "Thank you for your application. We will contact you shortly.",
+    "dashboard.jobs.description": "Browse current job offers and apply online.",
+    "dashboard.myApplications.title": "My Applications",
+    "dashboard.myApplications.description":
+      "Overview of your submitted applications",
 
-    // Dashboard Profile Tab
-    "dashboard.profile.title": "Your Profile",
-    "dashboard.profile.description":
-      "Manage your personal information and password.",
+    // Common UI elements
+    "common.save": "Save",
+    "common.saving": "Saving...",
+    "common.cancel": "Cancel",
+    "common.confirm": "Confirm",
+    "common.submit": "Submit",
+    "common.delete": "Delete",
+    "common.edit": "Edit",
+    "common.back": "Back",
+    "common.next": "Next",
+    "common.loading": "Loading...",
   },
 };

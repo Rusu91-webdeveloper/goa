@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,23 +27,33 @@ import {
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-const formSchema = z
-  .object({
-    password: z
-      .string()
-      .min(8, "Das Passwort muss mindestens 8 Zeichen lang sein")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Das Passwort muss mindestens einen Großbuchstaben, einen Kleinbuchstaben und eine Zahl enthalten"
-      ),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Die Passwörter stimmen nicht überein",
-    path: ["confirmPassword"],
-  });
+// Updated Zod schema to use translation function for messages
+const getFormSchema = (t: Function) =>
+  z
+    .object({
+      password: z
+        .string()
+        .min(
+          8,
+          t("auth.resetPassword.passwordTooShort") ||
+            "Password must be at least 8 characters long"
+        )
+        // Keeping regex for now, but ideally this message would also be translated if more complex
+        .regex(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+          t("auth.password.complexity") ||
+            "Password must contain an uppercase letter, a lowercase letter, and a number."
+        ),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message:
+        t("auth.resetPassword.passwordMismatch") ||
+        "The passwords do not match.",
+      path: ["confirmPassword"],
+    });
 
-type FormData = z.infer<typeof formSchema>;
+type FormData = z.infer<ReturnType<typeof getFormSchema>>;
 
 interface ResetPasswordFormProps {
   token: string;
@@ -55,7 +65,9 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
   const { toast } = useToast();
-  const { t } = useI18n();
+  const { t, language } = useI18n();
+
+  const formSchema = getFormSchema(t);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -64,6 +76,14 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       confirmPassword: "",
     },
   });
+
+  // Effect to reset form validation state if language changes, as Zod messages might change
+  useEffect(() => {
+    // This will clear previous validation errors that might have been in a different language
+    // and re-evaluate with the new language's Zod messages if a submission is attempted.
+    // If you want to clear field values as well, you can use form.reset().
+    form.clearErrors();
+  }, [language, form]);
 
   async function onSubmit(data: FormData) {
     setIsLoading(true);
@@ -81,25 +101,37 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Ein Fehler ist aufgetreten");
+        const apiErrorMessage = errorData.translationKey
+          ? t(errorData.translationKey)
+          : errorData.message;
+        throw new Error(
+          apiErrorMessage ||
+            t("auth.forgot.error.server") ||
+            "An error occurred."
+        );
       }
 
       setIsSubmitted(true);
       toast({
-        title: "Passwort zurückgesetzt",
+        title: t("auth.resetPassword.successTitle") || "Password Reset",
         description:
-          "Ihr Passwort wurde erfolgreich zurückgesetzt. Sie können sich jetzt anmelden.",
+          t("auth.resetPassword.successMessage") ||
+          "Your password has been reset successfully. You can now log in.",
       });
     } catch (error) {
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
+          : t("auth.forgot.error.server") ||
+              "An error occurred. Please try again later."
       );
       toast({
-        title: "Fehler",
+        title: t("auth.resetPassword.errorTitle") || "Error",
         description:
-          "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.",
+          error instanceof Error
+            ? error.message
+            : t("auth.forgot.error.server") ||
+              "An error occurred. Please try again later.",
         variant: "destructive",
       });
     } finally {
@@ -113,17 +145,21 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         <div className="rounded-md bg-green-50 dark:bg-green-900/20 p-4 text-sm text-green-800 dark:text-green-300">
           <div className="flex items-center">
             <CheckCircle className="h-5 w-5 mr-2 flex-shrink-0" />
-            <p>Ihr Passwort wurde erfolgreich zurückgesetzt!</p>
+            <p>
+              {t("auth.resetPassword.successTitle") ||
+                "Password reset successfully!"}
+            </p>
           </div>
         </div>
         <p className="text-sm text-gray-600 dark:text-gray-400">
-          Sie können sich jetzt mit Ihrem neuen Passwort anmelden.
+          {t("auth.resetPassword.successMessage") ||
+            "You can now log in with your new password."}
         </p>
         <Button
           className="mt-2"
           onClick={() => router.push("/login")}>
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Zum Login
+          {t("auth.resetPassword.backToLogin") || "Back to Login"}
         </Button>
       </div>
     );
@@ -147,12 +183,16 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Neues Passwort</FormLabel>
+              <FormLabel>
+                {t("auth.resetPassword.newPassword") || "New Password"}
+              </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   type="password"
-                  placeholder="••••••••"
+                  placeholder={
+                    t("auth.resetPassword.newPasswordPlaceholder") || "••••••••"
+                  }
                   autoComplete="new-password"
                   disabled={isLoading}
                   className="bg-white dark:bg-gray-950"
@@ -167,12 +207,18 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Passwort bestätigen</FormLabel>
+              <FormLabel>
+                {t("auth.resetPassword.confirmNewPassword") ||
+                  "Confirm New Password"}
+              </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   type="password"
-                  placeholder="••••••••"
+                  placeholder={
+                    t("auth.resetPassword.confirmPasswordPlaceholder") ||
+                    "••••••••"
+                  }
                   autoComplete="new-password"
                   disabled={isLoading}
                   className="bg-white dark:bg-gray-950"
@@ -189,10 +235,10 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           {isLoading ? (
             <div className="flex items-center justify-center">
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Wird gespeichert...
+              {t("auth.resetPassword.submittingButton") || "Setting..."}
             </div>
           ) : (
-            "Passwort zurücksetzen"
+            t("auth.resetPassword.submitButton") || "Set Password"
           )}
         </Button>
       </form>

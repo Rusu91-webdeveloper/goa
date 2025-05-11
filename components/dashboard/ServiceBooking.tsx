@@ -176,11 +176,11 @@ export default function ServiceBooking({
         {t("dashboard.services.intro")}
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {services.map((service) => (
           <Card
             key={service.id}
-            className="flex flex-col h-full transform transition-all duration-300 hover:shadow-lg hover:translate-y-[-4px] border border-gray-200 dark:border-gray-700">
+            className="flex flex-col h-full transform transition-all duration-300 hover:shadow-lg hover:translate-y-[-4px] border border-gray-200 dark:border-gray-700 relative">
             <CardHeader className="bg-violet-50 dark:bg-violet-900/20 pb-4">
               <CardTitle className="text-xl text-violet-800 dark:text-violet-300 flex items-center">
                 <Calendar className="h-5 w-5 mr-2 text-violet-600 dark:text-violet-400" />
@@ -202,12 +202,12 @@ export default function ServiceBooking({
               </div>
             </CardContent>
             <CardFooter className="pt-2 px-6 pb-6">
-              <Button
+              <div
                 onClick={() => handleBookService(service.id)}
-                className="w-full bg-violet-600 hover:bg-violet-700 text-white font-medium flex items-center justify-center">
+                className="w-full bg-violet-600 hover:bg-violet-700 text-white font-medium flex items-center justify-center rounded-md px-4 py-2 cursor-pointer">
                 <Calendar className="h-4 w-4 mr-2" />
                 {t("dashboard.services.book")}
-              </Button>
+              </div>
             </CardFooter>
           </Card>
         ))}
@@ -250,113 +250,93 @@ export default function ServiceBooking({
           ) : bookingStatus === "error" ? (
             <div className="flex flex-col items-center py-8">
               <CircleAlert className="h-16 w-16 text-red-500 mb-4" />
-              <p className="text-center text-gray-700 dark:text-gray-300">
+              <p className="text-center text-red-700 dark:text-red-300">
                 {t("dashboard.services.bookingErrorMessage")}
               </p>
             </div>
           ) : (
             <>
               <div className="grid gap-4 py-4">
-                <div className="grid gap-2">
+                <div className="flex flex-col gap-2">
                   <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t("dashboard.services.selectDate")}
                   </label>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className="w-full justify-start text-left font-normal border-gray-300 dark:border-gray-600 h-10">
-                        {selectedDate ? (
-                          <span className="text-violet-700 dark:text-violet-300 font-medium">
-                            {format(selectedDate, "PPP")}
-                          </span>
-                        ) : (
-                          <span className="text-muted-foreground">
-                            {t("dashboard.services.pickDate")}
-                          </span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
+                      <div
+                        className={`w-full px-3 py-2 text-left font-normal flex justify-between items-center cursor-pointer border border-gray-200 dark:border-gray-700 rounded-md hover:border-violet-500 dark:hover:border-violet-400 transition-colors ${
+                          !selectedDate
+                            ? "text-gray-400"
+                            : "text-gray-900 dark:text-gray-100"
+                        }`}>
+                        <span>
+                          {selectedDate ? (
+                            format(selectedDate, "PPP")
+                          ) : (
+                            <span>{t("dashboard.services.pickDate")}</span>
+                          )}
+                        </span>
+                        <CalendarIcon className="h-4 w-4 opacity-50" />
+                      </div>
                     </PopoverTrigger>
                     <PopoverContent
-                      className="w-auto min-w-[320px] p-0"
-                      align="start">
-                      <Calendar
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={setSelectedDate}
-                        disabled={(date) => date < new Date()}
-                        initialFocus
-                        className="rounded-md border border-gray-200 dark:border-gray-700 p-3 calendar-enhanced"
-                        classNames={{
-                          month: "space-y-4",
-                          caption:
-                            "flex justify-center pt-1 relative items-center",
-                          caption_label: "text-sm font-medium",
-                          nav: "space-x-1 flex items-center",
-                          nav_button:
-                            "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
-                          nav_button_previous: "absolute left-1",
-                          nav_button_next: "absolute right-1",
-                          table: "w-full border-collapse space-y-1",
-                          head_row: "flex",
-                          head_cell:
-                            "text-muted-foreground rounded-md w-9 font-medium text-[0.8rem] h-9",
-                          row: "flex w-full mt-2",
-                          cell: "text-center text-sm relative p-0 rounded-md focus-within:relative focus-within:z-20 h-9 w-9",
-                          day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-accent hover:text-accent-foreground rounded-md",
-                          day_today:
-                            "bg-accent text-accent-foreground opacity-90 ring-1 ring-offset-background ring-ring ring-offset-2",
-                          day_selected:
-                            "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-                          day_outside: "text-muted-foreground opacity-50",
-                          day_disabled:
-                            "text-muted-foreground opacity-50 hover:bg-transparent",
-                          day_range_middle:
-                            "aria-selected:bg-accent aria-selected:text-accent-foreground",
-                          day_hidden: "invisible",
-                        }}
-                      />
+                      className="w-auto p-0 z-[100]"
+                      align="start"
+                      side="bottom"
+                      sideOffset={8}>
+                      <div className="p-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+                        <Calendar
+                          mode="single"
+                          selected={selectedDate}
+                          onSelect={setSelectedDate}
+                          initialFocus
+                          className="rounded-md border"
+                        />
+                      </div>
                     </PopoverContent>
                   </Popover>
                 </div>
 
-                <div className="grid gap-2">
+                <div className="flex flex-col gap-2">
                   <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t("dashboard.services.additionalNotes")}
                   </label>
                   <Textarea
+                    placeholder={t("dashboard.services.notesPlaceholder")}
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    placeholder={t("dashboard.services.notesPlaceholder")}
-                    className="resize-none border-gray-300 dark:border-gray-600 min-h-[100px]"
+                    className="min-h-[100px] p-3 text-base"
                   />
                 </div>
               </div>
 
-              <DialogFooter>
-                <Button
-                  variant="outline"
+              <DialogFooter className="flex space-x-4 justify-end mt-2">
+                <div
                   onClick={() => setIsDialogOpen(false)}
-                  className="font-medium border-gray-300 dark:border-gray-600">
-                  {t("dashboard.services.cancel")}
-                </Button>
-                <Button
+                  className="px-4 py-2 rounded-md border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 cursor-pointer"
+                  style={{
+                    opacity: isSubmitting ? 0.5 : 1,
+                    pointerEvents: isSubmitting ? "none" : "auto",
+                  }}>
+                  {t("common.cancel")}
+                </div>
+                <div
                   onClick={handleSubmitBooking}
-                  disabled={isSubmitting}
-                  className="bg-violet-600 hover:bg-violet-700 text-white font-medium flex items-center">
+                  className="px-4 py-2 rounded-md bg-violet-600 hover:bg-violet-700 text-white cursor-pointer"
+                  style={{
+                    opacity: isSubmitting || !selectedDate ? 0.5 : 1,
+                    pointerEvents:
+                      isSubmitting || !selectedDate ? "none" : "auto",
+                  }}>
                   {isSubmitting ? (
-                    <>
+                    <div className="flex items-center">
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       {t("dashboard.services.processing")}
-                    </>
+                    </div>
                   ) : (
-                    <>
-                      <CheckCircle2 className="mr-2 h-4 w-4" />
-                      {t("dashboard.services.confirmBooking")}
-                    </>
+                    t("dashboard.services.confirmBooking")
                   )}
-                </Button>
+                </div>
               </DialogFooter>
             </>
           )}
