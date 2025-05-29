@@ -1,15 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
-import UserModel from "@/models/UserModel";
 import { ObjectId } from "mongodb";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { getCurrentUser } from "@/lib/auth";
+import mongoose from "mongoose";
+
+// Define the JobApplication schema
+const JobApplicationSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
+  jobId: { type: String, required: true },
+  coverLetter: { type: String, required: true },
+  resumeUrl: { type: String, required: true },
+  status: {
+    type: String,
+    default: "new",
+    enum: ["new", "reviewing", "interview", "accepted", "rejected"],
+  },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+});
+
+// Get or create the JobApplication model
+const JobApplication =
+  mongoose.models.JobApplication ||
+  mongoose.model("JobApplication", JobApplicationSchema);
 
 // PUT /api/admin/applications/[applicationId]/status - Update application status
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { applicationId: string } }
+  context: { params: { applicationId: string } }
 ) {
   try {
     // Try both authentication methods
@@ -27,11 +47,20 @@ export async function PUT(
       );
     }
 
-    const { applicationId } = params;
-
-    if (!applicationId || !ObjectId.isValid(applicationId)) {
+    // Get the application ID from params with async/await handling
+    const params = await Promise.resolve(context.params);
+    if (!params?.applicationId) {
       return NextResponse.json(
-        { success: false, message: "Invalid application ID" },
+        { success: false, message: "Application ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const applicationId = params.applicationId;
+
+    if (!ObjectId.isValid(applicationId)) {
+      return NextResponse.json(
+        { success: false, message: "Invalid application ID format" },
         { status: 400 }
       );
     }
@@ -64,11 +93,15 @@ export async function PUT(
 
     await connectToDatabase();
 
-    // Update the applicant status
-    const result = await UserModel.updateOne(
-      { _id: new ObjectId(applicationId), role: "applicant" },
-      { $set: { status } }
+    console.log(`Updating application ${applicationId} with status: ${status}`);
+
+    // Update the application status
+    const result = await JobApplication.updateOne(
+      { _id: new ObjectId(applicationId) },
+      { $set: { status, updatedAt: new Date() } }
     );
+
+    console.log("Update result:", result);
 
     if (result.matchedCount === 0) {
       return NextResponse.json(
@@ -80,6 +113,7 @@ export async function PUT(
     return NextResponse.json({
       success: true,
       message: "Application status updated successfully",
+      status: status,
     });
   } catch (error) {
     console.error("Error updating application status:", error);

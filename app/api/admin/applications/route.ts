@@ -4,7 +4,29 @@ import { getServerSession } from "next-auth/next";
 import { authOptions, getCurrentUser } from "@/lib/auth";
 import mongoose from "mongoose";
 
-// Define the JobApplication schema (same as in job-applications route)
+// Define interface for application
+interface IJobApplication {
+  _id: mongoose.Types.ObjectId;
+  userId: string;
+  jobId: string;
+  coverLetter: string;
+  resumeUrl: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Define interface for user
+interface IUser {
+  _id: mongoose.Types.ObjectId;
+  firstName?: string;
+  lastName?: string;
+  email: string;
+  phone?: string;
+  role?: string;
+}
+
+// Define the JobApplication schema
 const JobApplicationSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   jobId: { type: String, required: true },
@@ -12,8 +34,8 @@ const JobApplicationSchema = new mongoose.Schema({
   resumeUrl: { type: String, required: true },
   status: {
     type: String,
-    default: "pending",
-    enum: ["pending", "review", "interview", "accepted", "rejected"],
+    default: "new",
+    enum: ["new", "reviewing", "interview", "accepted", "rejected"],
   },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
@@ -23,6 +45,21 @@ const JobApplicationSchema = new mongoose.Schema({
 const JobApplication =
   mongoose.models.JobApplication ||
   mongoose.model("JobApplication", JobApplicationSchema);
+
+// Define the User schema
+const UserSchema = new mongoose.Schema({
+  firstName: { type: String },
+  lastName: { type: String },
+  email: { type: String, required: true },
+  password: { type: String },
+  role: { type: String },
+  phone: { type: String },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+});
+
+// Get or create the User model
+const User = mongoose.models.User || mongoose.model("User", UserSchema);
 
 // Helper function to check if user is admin
 async function checkAdminAuth() {
@@ -63,12 +100,6 @@ export async function GET(req: NextRequest) {
 
     // Build query
     const query: any = {};
-    if (search) {
-      query.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { email: { $regex: search, $options: "i" } },
-      ];
-    }
     if (status && status !== "all") {
       query.status = status;
     }
@@ -84,14 +115,62 @@ export async function GET(req: NextRequest) {
     const applications = await JobApplication.find(query)
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .lean();
 
     // Get unique positions for filter
     const positions = await JobApplication.distinct("jobId");
 
+    // Get user information for each application
+    const userIds = applications.map((app) => app.userId as string);
+    const users = await User.find({ _id: { $in: userIds } }).lean();
+
+    // Create a lookup map for users
+    const userMap: Record<string, any> = {};
+    users.forEach((user) => {
+      userMap[(user._id as any).toString()] = user;
+    });
+
+    // Filter applications if search is provided
+    let filteredApplications = applications;
+    if (search) {
+      filteredApplications = applications.filter((app) => {
+        const user = userMap[app.userId as string];
+        if (!user) return false;
+
+        const fullName = `${user.firstName || ""} ${
+          user.lastName || ""
+        }`.trim();
+        return (
+          fullName.toLowerCase().includes(search.toLowerCase()) ||
+          user.email.toLowerCase().includes(search.toLowerCase())
+        );
+      });
+    }
+
+    // Format applications with user data
+    const formattedApplications = filteredApplications.map((app) => {
+      const user = userMap[app.userId as string];
+      const fullName = user
+        ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
+        : "Unknown";
+
+      return {
+        _id: (app._id as any).toString(),
+        name: fullName,
+        email: user ? user.email : "Unknown",
+        phone: user ? user.phone || "Not provided" : "Not provided",
+        position: app.jobId || "Not specified",
+        coverLetter: app.coverLetter,
+        resumeUrl: app.resumeUrl,
+        status: app.status,
+        createdAt: app.createdAt.toISOString(),
+      };
+    });
+
     return NextResponse.json({
       success: true,
-      applications,
+      applications: formattedApplications,
       totalPages,
       positions,
     });

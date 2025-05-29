@@ -46,6 +46,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "@/components/ui/use-toast";
 
 interface JobApplication {
   _id: string;
@@ -160,18 +161,31 @@ export default function ApplicationsPage() {
       const data = await response.json();
 
       if (data.success) {
+        // First update the selected application in the state
         if (selectedApplication) {
-          setSelectedApplication({
+          const updatedApplication = {
             ...selectedApplication,
             status: newStatus as JobApplication["status"],
-          });
+          };
+          setSelectedApplication(updatedApplication);
+
+          // Also update it in the applications list
+          setApplications(
+            applications.map((app) =>
+              app._id === applicationId ? updatedApplication : app
+            )
+          );
         }
-        fetchApplications();
+
+        // Optionally refresh all data
+        // fetchApplications();
       } else {
         console.error("Failed to update status:", data.message);
+        alert(`Failed to update status: ${data.message}`);
       }
     } catch (error) {
       console.error("Error updating status:", error);
+      alert("Error updating application status. Please try again.");
     }
   };
 
@@ -218,11 +232,29 @@ export default function ApplicationsPage() {
 
       if (data.success) {
         setIsReplyDialogOpen(false);
+        toast({
+          title: "Antwort gesendet",
+          description: "Die Antwort wurde erfolgreich gesendet.",
+          variant: "default",
+        });
       } else {
         console.error("Failed to send reply:", data.message);
+        toast({
+          title: "Fehler beim Senden",
+          description:
+            process.env.NODE_ENV === "development"
+              ? "Im Entwicklungsmodus werden E-Mails nicht gesendet. Überprüfen Sie die Konsole für Details."
+              : `Fehler: ${data.message || "Unbekannter Fehler"}`,
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error sending reply:", error);
+      toast({
+        title: "Fehler beim Senden",
+        description: "Ein unerwarteter Fehler ist aufgetreten.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -250,6 +282,28 @@ export default function ApplicationsPage() {
       month: "2-digit",
       day: "2-digit",
     }).format(date);
+  };
+
+  const formatPosition = (position: string) => {
+    // If position contains a job ID or code, make it more readable
+    if (position.includes("-") || position.includes("_")) {
+      return position
+        .split(/[-_]/)
+        .map(
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        )
+        .join(" ");
+    }
+
+    // Convert camelCase to Title Case
+    if (/[a-z][A-Z]/.test(position)) {
+      return position
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
+        .replace(/\b\w/g, (l) => l.toUpperCase());
+    }
+
+    // Basic capitalization for other cases
+    return position.charAt(0).toUpperCase() + position.slice(1);
   };
 
   return (
@@ -349,7 +403,9 @@ export default function ApplicationsPage() {
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>{application.position}</TableCell>
+                    <TableCell>
+                      {formatPosition(application.position)}
+                    </TableCell>
                     <TableCell>{formatDate(application.createdAt)}</TableCell>
                     <TableCell>{getStatusBadge(application.status)}</TableCell>
                     <TableCell className="text-right">
@@ -387,10 +443,13 @@ export default function ApplicationsPage() {
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                  disabled={currentPage === 1}
-                />
+                {currentPage > 1 ? (
+                  <PaginationPrevious
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                  />
+                ) : (
+                  <PaginationPrevious className="pointer-events-none opacity-50" />
+                )}
               </PaginationItem>
 
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(
@@ -406,12 +465,13 @@ export default function ApplicationsPage() {
               )}
 
               <PaginationItem>
-                <PaginationNext
-                  onClick={() =>
-                    setCurrentPage(Math.min(totalPages, currentPage + 1))
-                  }
-                  disabled={currentPage === totalPages}
-                />
+                {currentPage < totalPages ? (
+                  <PaginationNext
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                  />
+                ) : (
+                  <PaginationNext className="pointer-events-none opacity-50" />
+                )}
               </PaginationItem>
             </PaginationContent>
           </Pagination>
@@ -445,7 +505,7 @@ export default function ApplicationsPage() {
                   <h3 className="text-sm font-medium text-gray-500">
                     Position
                   </h3>
-                  <p>{selectedApplication.position}</p>
+                  <p>{formatPosition(selectedApplication.position)}</p>
                 </div>
                 <div>
                   <h3 className="text-sm font-medium text-gray-500">Datum</h3>
@@ -455,7 +515,7 @@ export default function ApplicationsPage() {
                   <h3 className="text-sm font-medium text-gray-500">Status</h3>
                   <div className="mt-1">
                     <Select
-                      defaultValue={selectedApplication.status}
+                      value={selectedApplication.status}
                       onValueChange={(value) =>
                         handleUpdateStatus(selectedApplication._id, value)
                       }>

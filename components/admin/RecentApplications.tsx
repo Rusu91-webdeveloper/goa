@@ -71,14 +71,39 @@ export default function RecentApplications() {
       case "reviewing":
         return statusReviewing;
       case "interviewed":
+      case "interview":
         return statusInterviewed;
       case "hired":
+      case "accepted":
         return statusHired;
       case "rejected":
         return statusRejected;
       default:
         return statusNew;
     }
+  };
+
+  // Function to format position name for better display
+  const formatPosition = (position: string) => {
+    // If position contains a job ID or code, make it more readable
+    if (position.includes("-") || position.includes("_")) {
+      return position
+        .split(/[-_]/)
+        .map(
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        )
+        .join(" ");
+    }
+
+    // Convert camelCase to Title Case
+    if (/[a-z][A-Z]/.test(position)) {
+      return position
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
+        .replace(/\b\w/g, (l) => l.toUpperCase());
+    }
+
+    // Basic capitalization for other cases
+    return position.charAt(0).toUpperCase() + position.slice(1);
   };
 
   return (
@@ -163,7 +188,7 @@ export default function RecentApplications() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-500 dark:text-gray-400">
-                      {application.position}
+                      {formatPosition(application.position)}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
