@@ -17,4 +17,10 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
+  // Allow cross-origin requests during development
+  devServer: {
+    allowedDevOrigins: ["192.168.178.37"],
+  },
 };
+
+module.exports = nextConfig;
