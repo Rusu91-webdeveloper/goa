@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -34,6 +34,19 @@ import {
 import { useI18n } from "@/lib/i18n/i18n-context";
 import { toast } from "@/components/ui/use-toast";
 import "@/styles/mui-calendar.css";
+
+// Suppress React 19 ref warning (this is a temporary workaround)
+const originalConsoleError = console.error;
+console.error = function (...args) {
+  if (
+    args[0] &&
+    typeof args[0] === "string" &&
+    args[0].includes("Accessing element.ref was removed in React 19")
+  ) {
+    return;
+  }
+  originalConsoleError.apply(console, args);
+};
 
 interface ServiceBookingProps {
   userId: string;
@@ -89,19 +102,43 @@ export default function ServiceBooking({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedService, setSelectedService] = useState<string | null>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [displayDate, setDisplayDate] = useState<string>("");
   const [notes, setNotes] = useState("");
   const [bookingStatus, setBookingStatus] = useState<
     "success" | "error" | null
   >(null);
 
+  // Update display date whenever selectedDate changes
+  useEffect(() => {
+    if (selectedDate) {
+      setDisplayDate(format(selectedDate, "dd.MM.yyyy"));
+    } else {
+      setDisplayDate("");
+    }
+  }, [selectedDate]);
+
   const handleBookService = (serviceId: string) => {
+    // Reset any previous state
+    setSelectedDate(null);
+    setNotes("");
+    setBookingStatus(null);
+
+    // Set new service and open dialog
     setSelectedService(serviceId);
     setIsDialogOpen(true);
+
+    // Show feedback that booking form is opened
+    const serviceName = services.find((s) => s.id === serviceId)?.title;
+    toast({
+      title: t("dashboard.services.bookingStarted"),
+      description: serviceName,
+      duration: 3000,
+    });
   };
 
   const handleSubmitBooking = async () => {
-    if (!selectedService || !selectedDate) {
+    if (!selectedService || selectedDate === null) {
       toast({
         title: t("dashboard.services.error"),
         description: t("dashboard.services.selectDateError"),
@@ -145,7 +182,7 @@ export default function ServiceBooking({
         setTimeout(() => {
           setIsDialogOpen(false);
           setSelectedService(null);
-          setSelectedDate(undefined);
+          setSelectedDate(null);
           setNotes("");
           setBookingStatus(null);
         }, 2000);
@@ -170,7 +207,21 @@ export default function ServiceBooking({
   };
 
   const handleDateChange = (value: Date | null) => {
-    setSelectedDate(value || undefined);
+    // Log the selection for debugging
+    console.log("Date selected:", value);
+
+    // Ensure we always have a consistent type (Date or null, never undefined)
+    setSelectedDate(value);
+
+    // Show feedback that the date was selected
+    if (value) {
+      toast({
+        title: "Date selected",
+        description: format(value, "dd.MM.yyyy"),
+        variant: "default",
+        duration: 1500,
+      });
+    }
   };
 
   const today = new Date();
@@ -211,12 +262,12 @@ export default function ServiceBooking({
                 </div>
               </CardContent>
               <CardFooter className="pt-2 px-6 pb-6">
-                <div
+                <Button
                   onClick={() => handleBookService(service.id)}
-                  className="w-full bg-violet-600 hover:bg-violet-700 text-white font-medium flex items-center justify-center rounded-md px-4 py-2 cursor-pointer">
+                  className="w-full bg-violet-600 hover:bg-violet-700 text-white font-medium">
                   <Calendar className="h-4 w-4 mr-2" />
                   {t("dashboard.services.book")}
-                </div>
+                </Button>
               </CardFooter>
             </Card>
           ))}
@@ -270,34 +321,82 @@ export default function ServiceBooking({
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                       {t("dashboard.services.selectDate")}
                     </label>
-                    <div className="w-full">
+                    <div className="w-full date-picker-container">
+                      <style
+                        jsx
+                        global>{`
+                        /* Ensure the popover is on top of the dialog */
+                        .MuiPickersPopper-root {
+                          z-index: 2000 !important;
+                        }
+                        /* Make calendar controls clickable */
+                        .MuiPickersCalendarHeader-root button,
+                        .MuiDayCalendar-root button,
+                        .MuiPickersDay-root,
+                        .MuiPickersArrowSwitcher-root button {
+                          pointer-events: auto !important;
+                          cursor: pointer !important;
+                        }
+                        /* Make calendar have proper size */
+                        .MuiPickersPopper-root .MuiPaper-root {
+                          transform: scale(1) !important;
+                        }
+                      `}</style>
                       <DatePicker
                         value={selectedDate}
                         onChange={handleDateChange}
                         minDate={today}
                         format="dd.MM.yyyy"
-                        views={["year", "month", "day"]}
-                        slotProps={{
-                          textField: {
-                            fullWidth: true,
-                            variant: "outlined",
-                            sx: {
-                              "& .MuiOutlinedInput-root": {
-                                backgroundColor: "transparent",
-                                "& fieldset": {
-                                  borderColor: "transparent",
-                                },
-                                "&:hover fieldset": {
-                                  borderColor: "rgba(0, 0, 0, 0.23)",
-                                },
-                                "&.Mui-focused fieldset": {
-                                  borderColor: "rgba(0, 0, 0, 0.23)",
-                                },
-                              },
+                        autoFocus
+                        sx={{
+                          width: "100%",
+                          "& .MuiOutlinedInput-root": {
+                            backgroundColor: "transparent",
+                            "& fieldset": {
+                              borderColor: "rgba(0, 0, 0, 0.23)",
+                              borderWidth: "1px",
+                            },
+                            "&:hover fieldset": {
+                              borderColor: "#8b5cf6", // Violet color
+                            },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#8b5cf6", // Violet color
+                              borderWidth: "2px",
                             },
                           },
                         }}
+                        slotProps={{
+                          popper: {
+                            placement: "bottom-start",
+                            modifiers: [
+                              {
+                                name: "preventOverflow",
+                                options: {
+                                  boundary: "viewport",
+                                },
+                              },
+                              {
+                                name: "flip",
+                                options: {
+                                  fallbackPlacements: ["top-start"],
+                                },
+                              },
+                              {
+                                name: "offset",
+                                options: {
+                                  offset: [0, 10],
+                                },
+                              },
+                            ],
+                          },
+                        }}
                       />
+                      {/* Show the selected date below the picker for clarity */}
+                      {selectedDate && (
+                        <div className="mt-2 text-sm font-medium text-violet-700 dark:text-violet-300">
+                          Selected date: {displayDate}
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -315,23 +414,16 @@ export default function ServiceBooking({
                 </div>
 
                 <DialogFooter className="flex space-x-4 justify-end mt-2">
-                  <div
+                  <Button
                     onClick={() => setIsDialogOpen(false)}
-                    className="px-4 py-2 rounded-md border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 cursor-pointer"
-                    style={{
-                      opacity: isSubmitting ? 0.5 : 1,
-                      pointerEvents: isSubmitting ? "none" : "auto",
-                    }}>
+                    variant="outline"
+                    disabled={isSubmitting}>
                     {t("common.cancel")}
-                  </div>
-                  <div
+                  </Button>
+                  <Button
                     onClick={handleSubmitBooking}
-                    className="px-4 py-2 rounded-md bg-violet-600 hover:bg-violet-700 text-white cursor-pointer"
-                    style={{
-                      opacity: isSubmitting || !selectedDate ? 0.5 : 1,
-                      pointerEvents:
-                        isSubmitting || !selectedDate ? "none" : "auto",
-                    }}>
+                    disabled={isSubmitting || selectedDate === null}
+                    className="bg-violet-600 hover:bg-violet-700 text-white">
                     {isSubmitting ? (
                       <div className="flex items-center">
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -340,7 +432,7 @@ export default function ServiceBooking({
                     ) : (
                       t("dashboard.services.confirmBooking")
                     )}
-                  </div>
+                  </Button>
                 </DialogFooter>
               </>
             )}
